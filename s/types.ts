@@ -3,7 +3,7 @@ import {Fns, Remote, Rig} from "renraku"
 
 export type AsFns<F extends Fns> = F
 
-export type SetupFns<F extends Fns, R extends Fns> = (remote: Remote<R>, rig: Rig, event: MessageEvent) => F
+export type SetupFns<F extends Fns, R extends Fns> = (remote: Remote<R>, rig: Rig) => F
 
 /** user provided functions on both sides */
 export type Schematic = {

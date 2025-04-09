@@ -8,9 +8,10 @@ export async function comrade<S extends Schematic>(
 
 	const messenger = new Messenger<MinistryFns<S>>({
 		timeout: 120_000,
-		remotePortal: new Messenger.MessagePortal(self),
-		getLocalEndpoint: (remote, rig, event) => endpoint(setup(remote.commissar, rig, event)),
+		getLocalEndpoint: (remote, rig) => endpoint(setup(remote.commissar, rig))
 	})
+
+	messenger.attach(self)
 
 	await messenger.remote.apparatchik.ready()
 	return messenger.remote.commissar
