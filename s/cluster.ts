@@ -1,19 +1,18 @@
 
-import {deferPromise, DeferPromise} from "@benev/slate"
-import {Endpoint, JsonRpc, remote, Remote} from "renraku"
+import {deferPromise} from "@benev/slate"
+import {Endpoint, remote, Remote} from "renraku"
 
 import {Thread} from "./parts/thread.js"
-import {CentralPlan, Schematic} from "./parts/types.js"
+import {Options, Schematic, Task} from "./parts/types.js"
 import {establishThreads} from "./parts/establish-threads.js"
 
-export type Task = {
-	request: JsonRpc.Request
-	transfer: Transferable[] | undefined
-	prom: DeferPromise<JsonRpc.Response | null>
-}
-
+/**
+ * a pool of web workers
+ *  - please use `await Cluster.setup(options)` to create a new cluster
+ *  - call your worker functions like `await cluster.remote.helloWorld()`
+ */
 export class Cluster<S extends Schematic> {
-	static async setup<S extends Schematic>(plan: CentralPlan<S>) {
+	static async setup<S extends Schematic>(plan: Options<S>) {
 		const threads = await establishThreads<S>(plan)
 		return new this<S>(threads)
 	}

@@ -1,34 +1,41 @@
 
-import {Fns, Remote, Rig} from "renraku"
+import {DeferPromise} from "@benev/slate"
+import {Fns, JsonRpc, Remote, Rig} from "renraku"
 
 export type AsFns<F extends Fns> = F
-
 export type SetupFns<F extends Fns, R extends Fns> = (remote: Remote<R>, rig: Rig) => F
 
-/** options for the kremlin */
-export type CentralPlan<S extends Schematic> = {
+/** a schematic requires devs to define functionality on both sides */
+export type Schematic = {
+	workerFns: Fns
+	clusterFns: Fns
+}
+
+/** keeps your schematic honest */
+export type AsSchematic<S extends Schematic> = S
+
+/** options for the cluster */
+export type Options<S extends Schematic> = {
 	workerUrl: string | URL
-	setupMainFns: SetupFns<S["mainFns"], S["workerFns"]>
+	setupClusterFns: SetupFns<S["clusterFns"], S["workerFns"]>
 	label?: string
 	workerCount?: number
 }
 
-/** user provided functions on both sides */
-export type Schematic = {
-	mainFns: Fns
-	workerFns: Fns
-}
-
-export type AsSchematic<S extends Schematic> = S
-
 /** internal systemic functionality that lives on the main thread */
-export type ApparatchikFns = AsFns<{
+export type MetaFns = AsFns<{
 	ready(): Promise<void>
 }>
 
 /** internal systemic functions plus the user's own */
 export type MinistryFns<S extends Schematic> = {
-	apparatchik: ApparatchikFns
-	commissar: S["mainFns"]
+	metaFns: MetaFns
+	clusterFns: S["clusterFns"]
+}
+
+export type Task = {
+	request: JsonRpc.Request
+	transfer: Transferable[] | undefined
+	prom: DeferPromise<JsonRpc.Response | null>
 }
 
