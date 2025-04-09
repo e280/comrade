@@ -25,7 +25,7 @@ export async function establishThreads<S extends Schematic>(options: Options<S>)
 			timeout: options.timeout ?? Infinity,
 			getLocalEndpoint: (remote, rig) => endpoint({
 				metaFns,
-				clusterFns: options.setupMainFns(remote, rig)
+				mainFns: options.setupMainFns(remote, rig)
 			}),
 		})
 

@@ -1,5 +1,5 @@
 
-// create a web worker cluster, and call functions on it
+// create a pool of web workers, and call functions on it
 
 import {Workers} from "../workers.js"
 import {MySchematic} from "./schematic.js"

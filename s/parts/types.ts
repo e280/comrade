@@ -14,7 +14,7 @@ export type Schematic = {
 /** keeps your schematic honest */
 export type AsSchematic<S extends Schematic> = S
 
-/** options for the cluster */
+/** options for the workers pool */
 export type Options<S extends Schematic> = {
 	workerUrl: string | URL
 	setupMainFns: SetupFns<S["mainFns"], S["workerFns"]>

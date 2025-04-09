@@ -8,8 +8,8 @@ import {establishThreads} from "./parts/establish-threads.js"
 
 /**
  * a pool of web workers
- *  - please use `await Cluster.setup(options)` to create a new cluster
- *  - call your worker functions like `await cluster.remote.helloWorld()`
+ *  - please use `await Workers.setup(options)` to create your workers pool
+ *  - call your worker functions like `await workers.remote.hello()`
  */
 export class Workers<S extends Schematic> {
 	static async setup<S extends Schematic>(options: Options<S>) {
