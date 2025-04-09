@@ -1,6 +1,6 @@
 {
 	"name": "@e280/comrade",
-	"version": "0.0.0",
+	"version": "0.0.0-0",
 	"description": "web-workers of the world unite",
 	"license": "MIT",
 	"author": "Chase Moskal <chasemoskal@gmail.com>",
