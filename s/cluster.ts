@@ -1,9 +1,10 @@
 
 import {deferPromise, DeferPromise} from "@benev/slate"
-import {endpoint, Endpoint, JsonRpc, Messenger, remote, Remote} from "renraku"
+import {Endpoint, JsonRpc, remote, Remote} from "renraku"
 
 import {Thread} from "./parts/thread.js"
-import {ApparatchikFns, Schematic, SetupFns} from "./types.js"
+import {CentralPlan, Schematic} from "./parts/types.js"
+import {establishThreads} from "./parts/establish-threads.js"
 
 export type Task = {
 	request: JsonRpc.Request
@@ -11,52 +12,15 @@ export type Task = {
 	prom: DeferPromise<JsonRpc.Response | null>
 }
 
-export type CentralPlan<S extends Schematic> = {
-	workerUrl: string | URL
-	setupCommissar: SetupFns<S["commissarFns"], S["comradeFns"]>
-	label?: string
-	workerCount?: number
-}
-
-export class Kremlin<S extends Schematic> {
-	remote: Remote<S["comradeFns"]>
-	#available = new Set<Thread<S>>()
-	#tasks: Task[] = []
-
+export class Cluster<S extends Schematic> {
 	static async setup<S extends Schematic>(plan: CentralPlan<S>) {
-		const path = new URL("./worker.js", import.meta.url)
-		const workerCount = plan.workerCount ?? Math.max(1, navigator.hardwareConcurrency - 1)
-
-		const threads = await Promise.all(Array(workerCount).map(async(_, index) => {
-			const worker = new Worker(path, {
-				type: "module",
-				name: `${plan.label ?? "comrade"}_${index + 1}`,
-			})
-
-			const readyprom = deferPromise<void>()
-
-			const apparatchik: ApparatchikFns = {
-				async ready() {
-					readyprom.resolve()
-				},
-			}
-
-			const messenger = new Messenger<S["comradeFns"]>({
-				timeout: 120_000,
-				getLocalEndpoint: (remote, rig) => endpoint({
-					apparatchik,
-					commissar: plan.setupCommissar(remote, rig)
-				}),
-			})
-
-			messenger.attach(worker)
-
-			await readyprom.promise
-			return new Thread<S>(worker, messenger)
-		}))
-
+		const threads = await establishThreads<S>(plan)
 		return new this<S>(threads)
 	}
+
+	remote: Remote<S["workerFns"]>
+	#available = new Set<Thread<S>>()
+	#tasks: Task[] = []
 
 	constructor(threads: Thread<S>[]) {
 

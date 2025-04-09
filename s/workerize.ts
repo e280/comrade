@@ -1,9 +1,9 @@
 
 import {endpoint, Messenger} from "renraku"
-import {MinistryFns, Schematic, SetupFns} from "../types.js"
+import {MinistryFns, Schematic, SetupFns} from "./parts/types.js"
 
-export async function comrade<S extends Schematic>(
-		setup: SetupFns<S["comradeFns"], S["commissarFns"]>,
+export async function workerize<S extends Schematic>(
+		setup: SetupFns<S["workerFns"], S["mainFns"]>,
 	) {
 
 	const messenger = new Messenger<MinistryFns<S>>({
