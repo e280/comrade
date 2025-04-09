@@ -11,9 +11,9 @@ import {establishThreads} from "./parts/establish-threads.js"
  *  - please use `await Cluster.setup(options)` to create a new cluster
  *  - call your worker functions like `await cluster.remote.helloWorld()`
  */
-export class Cluster<S extends Schematic> {
-	static async setup<S extends Schematic>(plan: Options<S>) {
-		const threads = await establishThreads<S>(plan)
+export class Workers<S extends Schematic> {
+	static async setup<S extends Schematic>(options: Options<S>) {
+		const threads = await establishThreads<S>(options)
 		return new this<S>(threads)
 	}
 
@@ -21,7 +21,7 @@ export class Cluster<S extends Schematic> {
 	#available = new Set<Thread<S>>()
 	#tasks: Task[] = []
 
-	constructor(threads: Thread<S>[]) {
+	constructor(private threads: Thread<S>[]) {
 
 		// delegation
 		const remoteEndpoint: Endpoint = async(request, transfer) => this.#scheduleTask({
@@ -35,6 +35,11 @@ export class Cluster<S extends Schematic> {
 
 		// in the beginning, all threads are available
 		threads.forEach(t => this.#available.add(t))
+	}
+
+	terminate() {
+		for (const thread of this.threads)
+			thread.terminate()
 	}
 
 	#scheduleTask(task: Task) {

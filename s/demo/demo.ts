@@ -1,19 +1,20 @@
 
 // create a web worker cluster, and call functions on it
 
-import {Cluster} from "../cluster.js"
-import {DemoSchematic} from "./types.js"
+import {Workers} from "../workers.js"
+import {MySchematic} from "./schematic.js"
 
-const cluster = await Cluster.setup<DemoSchematic>({
+const workers = await Workers.setup<MySchematic>({
 	workerUrl: new URL("./math.worker.js", import.meta.url),
-	setupClusterFns: () => ({
+	setupMainFns: () => ({
 		async mul(a: number, b: number) {
 			return a * b
 		},
 	}),
 })
 
-const result = await cluster.remote.add(1, 2)
+const x = await workers.remote.add(2, 3)
+console.log(x) // 5
 
-console.log(result)
+workers.terminate()
 

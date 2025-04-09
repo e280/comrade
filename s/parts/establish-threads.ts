@@ -22,10 +22,10 @@ export async function establishThreads<S extends Schematic>(options: Options<S>)
 		}
 
 		const messenger = new Messenger<S["workerFns"]>({
-			timeout: 120_000,
+			timeout: options.timeout ?? Infinity,
 			getLocalEndpoint: (remote, rig) => endpoint({
 				metaFns,
-				clusterFns: options.setupClusterFns(remote, rig)
+				clusterFns: options.setupMainFns(remote, rig)
 			}),
 		})
 

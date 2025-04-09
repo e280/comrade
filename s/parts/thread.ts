@@ -8,9 +8,9 @@ export class Thread<S extends Schematic> {
 		public messenger: Messenger<S["workerFns"]>,
 	) {}
 
-	dispose() {
+	terminate() {
 		this.worker.terminate()
-		this.dispose()
+		this.terminate()
 	}
 }
 

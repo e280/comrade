@@ -8,7 +8,7 @@ export type SetupFns<F extends Fns, R extends Fns> = (remote: Remote<R>, rig: Ri
 /** a schematic requires devs to define functionality on both sides */
 export type Schematic = {
 	workerFns: Fns
-	clusterFns: Fns
+	mainFns: Fns
 }
 
 /** keeps your schematic honest */
@@ -17,8 +17,9 @@ export type AsSchematic<S extends Schematic> = S
 /** options for the cluster */
 export type Options<S extends Schematic> = {
 	workerUrl: string | URL
-	setupClusterFns: SetupFns<S["clusterFns"], S["workerFns"]>
+	setupMainFns: SetupFns<S["mainFns"], S["workerFns"]>
 	label?: string
+	timeout?: number
 	workerCount?: number
 }
 
@@ -30,7 +31,7 @@ export type MetaFns = AsFns<{
 /** internal systemic functions plus the user's own */
 export type MinistryFns<S extends Schematic> = {
 	metaFns: MetaFns
-	clusterFns: S["clusterFns"]
+	mainFns: S["mainFns"]
 }
 
 export type Task = {

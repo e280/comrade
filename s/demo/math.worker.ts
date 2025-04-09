@@ -1,10 +1,10 @@
 
 // this is a web worker
 
-import {workerize} from "../workerize.js"
-import {DemoSchematic} from "./types.js"
+import {worker} from "../worker.js"
+import {MySchematic} from "./schematic.js"
 
-workerize<DemoSchematic>(() => ({
+await worker<MySchematic>(() => ({
 	async add(a, b) {
 		return a + b
 	},
