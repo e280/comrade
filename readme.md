@@ -11,9 +11,9 @@
 - thread communication powered by [renraku](https://github.com/chase-moskal/renraku)
 
 ### let's do it
-- **install comrade**
+- **install `@e280/comrade` and `renraku`**
   ```sh
-  npm install @e280/comrade
+  npm install @e280/comrade renraku
   ```
 - **make your `schematic.ts`**
   ```ts
@@ -71,5 +71,59 @@
 
   // terminate the workers when you're all done
   workers.terminate()
+  ```
+
+#### nesty is besty
+- you can in fact do arbitrary nesting of your functions
+  ```ts
+  const main = await worker<MySchematic>(() => ({
+
+    math: {
+      async add(a, b) {
+        return a + b
+      },
+      async mul(a, b) {
+        return a * b
+      },
+    },
+
+    incredi: {
+      wow: {
+        async hello(a, b) {
+          return "hello world!"
+        },
+      },
+    },
+  }))
+
+  // elsewhere.js
+  await workers.remote.math.add(2, 3) // 5
+  await workers.remote.incredi.wow.hello() // "hello world!"
+  ```
+
+### tuning calls
+- this advancedness is brought to you by [renraku](https://github.com/chase-moskal/renraku)
+
+#### hmm, *transferables,* you say?
+- you can provide an array of transferables on any api call
+  ```ts
+  import {tune} from "renraku"
+
+  const data = new Uint8Array([0xDE, 0xAD, 0xBE, 0xEF])
+
+  await workers.remote.hello[tune]({transfer: [data]})({
+    lol: "whatever",
+    data, // <-- this gets transfered speedy-fastly, not copied (we like this)
+  })
+  ```
+
+#### notifications
+- you can also make a call a *notification*, which means no response will be sent back (just shouting into the void)
+  ```ts
+  import {tune} from "renraku"
+
+  await workers.remote.goodbye[tune]({notify: true})({
+    lol: "whatever",
+  })
   ```
 
