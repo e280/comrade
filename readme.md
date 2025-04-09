@@ -11,9 +11,9 @@
 - thread communication powered by [renraku](https://github.com/chase-moskal/renraku)
 
 ### let's do it
-- **install `@e280/comrade` and `renraku`**
+- **install comrade**
   ```sh
-  npm install @e280/comrade renraku
+  npm install @e280/comrade
   ```
 - **make your `schematic.ts`**
   ```ts
@@ -107,7 +107,7 @@
 #### hmm, *transferables,* you say?
 - you can provide an array of transferables on any api call
   ```ts
-  import {tune} from "renraku"
+  import {tune} from "@e280/comrade"
 
   const data = new Uint8Array([0xDE, 0xAD, 0xBE, 0xEF])
 
@@ -133,7 +133,7 @@
 #### notifications
 - you can also make a call a *notification*, which means no response will be sent back (just shouting into the void)
   ```ts
-  import {tune} from "renraku"
+  import {tune} from "@e280/comrade"
 
   await workers.remote.goodbye[tune]({notify: true})({
     lol: "whatever",
