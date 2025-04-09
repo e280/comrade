@@ -1,8 +1,7 @@
 
 import {DeferPromise} from "@benev/slate"
-import {Fns, JsonRpc, Remote, Rig} from "renraku"
+import {AsFns, Fns, JsonRpc, Remote, Rig} from "renraku"
 
-export type AsFns<F extends Fns> = F
 export type SetupFns<F extends Fns, R extends Fns> = (remote: Remote<R>, rig: Rig) => F
 
 /** a schematic requires devs to define functionality on both sides */
