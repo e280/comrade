@@ -37,7 +37,7 @@
   import {worker} from "@e280/comrade"
   import type {MySchematic} from "./schematic.js"
 
-  const main = await worker<MySchematic>(() => ({
+  const main = await worker<MySchematic>((main, rig) => ({
     async add(a, b) {
       return a + b
     },
@@ -76,7 +76,7 @@
 #### nesty is besty
 - you can in fact do arbitrary nesting of your functions
   ```ts
-  const main = await worker<MySchematic>(() => ({
+  const main = await worker<MySchematic>((main, rig) => ({
 
     math: {
       async add(a, b) {
@@ -115,6 +115,19 @@
     lol: "whatever",
     data, // <-- this gets transfered speedy-fastly, not copied (we like this)
   })
+  ```
+- that's good for outgoing requests, but now you also need to set transferables for your responses, which is done like this
+  ```ts
+  await worker<MySchematic>((main, rig) => ({
+    async coolAction(a, b) {
+      const data = new Uint8Array([0xDE, 0xAD, 0xBE, 0xEF])
+
+      // set transferables for this response
+      rig.transfer = [data] // <-- will be transferred, not copied
+
+      return {hello: "world", data}
+    },
+  }))
   ```
 
 #### notifications
