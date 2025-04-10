@@ -3,14 +3,13 @@
 
 # ☭ COMRADE
 
-### *WEB-WORKERS OF THE WORLD UNITE!*
-- web worker pooling and dispatch
-- function calls are automatically distributed across the available web workers
-- when all workers are busy, work is queued up, and will get done eventually
-- it's *bidirectional!* you can call worker functions, and worker functions can call you
+## *WEB-WORKERS OF THE WORLD UNITE!*
+- works in browsers and node
+- the async function calls are magically scheduled and distributed across the available web workers
+- it's *bidirectional!* you call worker functions — and worker functions call you
 - thread communication powered by [renraku](https://github.com/chase-moskal/renraku)
 
-### let's do it
+## *THE REVOLUTION BEGINS!*
 - **install comrade**
   ```sh
   npm install @e280/comrade
@@ -73,7 +72,7 @@
   workers.terminate()
   ```
 
-#### nesty is besty
+### nesty is besty
 - you can in fact do arbitrary nesting of your functions
   ```ts
   const main = await worker<MySchematic>((main, rig) => ({
@@ -101,10 +100,10 @@
   await workers.remote.incredi.wow.hello() // "hello world!"
   ```
 
-### tuning calls
+## *TUNE THE CALLS!*
 - this advancedness is brought to you by [renraku](https://github.com/chase-moskal/renraku)
 
-#### hmm, *transferables,* you say?
+### hmm, *transferables,* you say?
 - you can provide an array of transferables on any api call
   ```ts
   import {tune} from "@e280/comrade"
@@ -130,7 +129,7 @@
   }))
   ```
 
-#### notifications
+### notifications have no responses
 - you can also make a call a *notification*, which means no response will be sent back (just shouting into the void)
   ```ts
   import {tune} from "@e280/comrade"
