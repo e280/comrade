@@ -1,5 +1,5 @@
 
-import {deferPromise} from "@benev/slate"
+import {deferPromise} from "renraku"
 import {Endpoint, remote, Remote} from "renraku"
 
 import {Thread} from "./parts/thread.js"
@@ -51,6 +51,8 @@ export class Workers<S extends Schematic> {
 	#distributeTasks() {
 		while (this.#available.size > 0 && this.#tasks.length > 0) {
 			const thread = [...this.#available].pop()!
+			this.#available.delete(thread)
+
 			const task = this.#tasks.shift()!
 
 			// this thread is no longer available

@@ -1,5 +1,5 @@
 
-import {DeferPromise} from "@benev/slate"
+import {DeferPromise} from "renraku"
 import {AsFns, Fns, JsonRpc, Remote, Rig} from "renraku"
 
 export type SetupFns<F extends Fns, R extends Fns> = (remote: Remote<R>, rig: Rig) => F

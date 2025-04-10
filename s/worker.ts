@@ -1,5 +1,7 @@
 
 import {endpoint, Messenger} from "renraku"
+
+import {getSelf} from "./parts/compat.js"
 import {MinistryFns, Schematic, SetupFns} from "./parts/types.js"
 
 /**
@@ -15,7 +17,7 @@ export async function worker<S extends Schematic>(
 		getLocalEndpoint: (remote, rig) => endpoint(setup(remote.mainFns, rig))
 	})
 
-	messenger.attach(self)
+	messenger.attach(await getSelf())
 
 	await messenger.remote.metaFns.ready()
 	return messenger.remote.mainFns

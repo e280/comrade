@@ -2,17 +2,15 @@
 import {deferPromise, endpoint, Messenger} from "renraku"
 
 import {Thread} from "./thread.js"
+import {loadWorker} from "./compat.js"
 import {MetaFns, Options, Schematic} from "./types.js"
 
 export async function establishThreads<S extends Schematic>(options: Options<S>) {
 	const workerCount = options.workerCount ?? Math.max(1, navigator.hardwareConcurrency - 1)
 
-	return Promise.all(Array(workerCount).map(async(_, index) => {
-		const worker = new Worker(options.workerUrl, {
-			type: "module",
-			name: `${options.label ?? "comrade"}_${index + 1}`,
-		})
-
+	return await Promise.all([...Array(workerCount)].map(async(_, index) => {
+		const label = `${options.label ?? "comrade"}_${index + 1}`
+		const worker = await loadWorker(options.workerUrl, label)
 		const readyprom = deferPromise<void>()
 
 		const metaFns: MetaFns = {
