@@ -19,7 +19,7 @@
 		"test": "node x/demo/demo.js"
 	},
 	"dependencies": {
-		"renraku": "^0.5.0-5"
+		"renraku": "^0.5.0-6"
 	},
 	"devDependencies": {
 		"@types/node": "^22.14.0",
