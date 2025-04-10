@@ -1,7 +1,9 @@
 
 export * from "renraku"
 
+export * from "./parts/compat.js"
 export * from "./parts/establish-threads.js"
+export * from "./parts/setup.js"
 export * from "./parts/thread.js"
 export * from "./parts/types.js"
 

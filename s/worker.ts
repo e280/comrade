@@ -2,13 +2,13 @@
 import {endpoint, Messenger} from "renraku"
 
 import {getSelf} from "./parts/compat.js"
-import {MinistryFns, Schematic, SetupFns} from "./parts/types.js"
+import {MinistryFns, Schematic, SetupWorkerFns} from "./parts/types.js"
 
 /**
  * create a web worker
  */
 export async function worker<S extends Schematic>(
-		setup: SetupFns<S["workerFns"], S["mainFns"]>,
+		setup: SetupWorkerFns<S>,
 		options: {timeout?: number} = {}
 	) {
 

@@ -16,10 +16,10 @@
 		"_links": "ln -s \"$(realpath s/index.html)\" x/index.html && ln -s \"$(realpath node_modules)\" x/node_modules",
 		"_tsc": "tsc",
 		"start": "vite --port 8080 --config vite.config.mjs",
-		"test": "node x/demo/demo.js"
+		"test": "node x/demo/demo.js && node x/demo/demo-mocks.js"
 	},
 	"dependencies": {
-		"renraku": "^0.5.0-6"
+		"renraku": "^0.5.0-7"
 	},
 	"devDependencies": {
 		"@types/node": "^22.14.0",
