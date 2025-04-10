@@ -35,7 +35,7 @@ export async function getSelf() {
 }
 
 export async function loadWorker(url: string | URL, name: string | undefined) {
-	if (!isNode)
+	if (!isNode())
 		return new window.Worker(url, {name, type: "module"}) as CompatWorker
 
 	const {Worker} = await import("node:worker_threads")

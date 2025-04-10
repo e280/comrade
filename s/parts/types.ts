@@ -1,6 +1,5 @@
 
-import {DeferPromise} from "renraku"
-import {AsFns, Fns, JsonRpc, Remote, Rig} from "renraku"
+import {AsFns, Fns, JsonRpc, Remote, Rig, DeferPromise} from "renraku"
 
 export type SetupFns<F extends Fns, R extends Fns> = (remote: Remote<R>, rig: Rig) => F
 
