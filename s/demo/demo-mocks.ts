@@ -1,20 +1,20 @@
 
-import {mockSetup} from "../parts/setup.js"
+import {Comrade} from "../comrade.js"
 import {MySchematic} from "./schematic.js"
 
-const {worker, main} = mockSetup<MySchematic>({
-	setupWorkerFns: () => ({
+const {work, host} = Comrade.mocks<MySchematic>({
+	setupWork: (_host, _rig) => ({
 		async add(a, b) {
 			return a + b
 		},
 	}),
-	setupMainFns: () => ({
+	setupHost: (_worker, _rig) => ({
 		async mul(a, b) {
 			return a * b
 		},
 	}),
 })
 
-console.log(await worker.add(2, 3)) // 5
-console.log(await main.mul(2, 3)) // 6
+console.log(await work.add(2, 3)) // 5
+console.log(await host.mul(2, 3)) // 6
 

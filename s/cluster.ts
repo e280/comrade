@@ -1,6 +1,5 @@
 
-import {deferPromise} from "renraku"
-import {Endpoint, remote, Remote} from "renraku"
+import {deferPromise, Endpoint, remote, Remote} from "renraku"
 
 import {Thread} from "./parts/thread.js"
 import {Options, Schematic, Task} from "./parts/types.js"
@@ -8,16 +7,16 @@ import {establishThreads} from "./parts/establish-threads.js"
 
 /**
  * a pool of web workers
- *  - please use `await Workers.setup(options)` to create your workers pool
- *  - call your worker functions like `await workers.remote.hello()`
+ *  - please use `await Cluster.setup(options)` to create your worker pool
+ *  - call your worker functions like `await cluster.remote.hello()`
  */
-export class Workers<S extends Schematic> {
+export class Cluster<S extends Schematic> {
 	static async setup<S extends Schematic>(options: Options<S>) {
 		const threads = await establishThreads<S>(options)
 		return new this<S>(threads)
 	}
 
-	remote: Remote<S["workerFns"]>
+	work: Remote<S["work"]>
 	#available = new Set<Thread<S>>()
 	#tasks: Task[] = []
 
@@ -31,7 +30,7 @@ export class Workers<S extends Schematic> {
 		})
 
 		// remote proxy to call comrade fns
-		this.remote = remote(remoteEndpoint)
+		this.work = remote(remoteEndpoint)
 
 		// in the beginning, all threads are available
 		threads.forEach(t => this.#available.add(t))

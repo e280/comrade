@@ -3,35 +3,35 @@ import {AsFns, Fns, JsonRpc, Remote, Rig, DeferPromise} from "renraku"
 
 /** a schematic requires devs to define functionality on both sides */
 export type Schematic = {
-	workerFns: Fns
-	mainFns: Fns
+	work: Fns
+	host: Fns
 }
 
 /** keeps your schematic honest */
 export type AsSchematic<S extends Schematic> = S
 
-export type SetupFns<F extends Fns, R extends Fns> = (remote: Remote<R>, rig: Rig) => F
-export type SetupMainFns<S extends Schematic> = SetupFns<S["mainFns"], S["workerFns"]>
-export type SetupWorkerFns<S extends Schematic> = SetupFns<S["workerFns"], S["mainFns"]>
+export type Setup<F extends Fns, R extends Fns> = (remote: Remote<R>, rig: Rig) => F
+export type SetupWork<S extends Schematic> = Setup<S["work"], S["host"]>
+export type SetupHost<S extends Schematic> = Setup<S["host"], S["work"]>
 
-/** options for the workers pool */
+/** options for the worker cluster */
 export type Options<S extends Schematic> = {
 	workerUrl: string | URL
-	setupMainFns: SetupMainFns<S>
+	setupHost: SetupHost<S>
 	label?: string
 	timeout?: number
 	workerCount?: number
 }
 
 /** internal systemic functionality that lives on the main thread */
-export type MetaFns = AsFns<{
+export type Meta = AsFns<{
 	ready(): Promise<void>
 }>
 
 /** internal systemic functions plus the user's own */
 export type MinistryFns<S extends Schematic> = {
-	metaFns: MetaFns
-	mainFns: S["mainFns"]
+	meta: Meta
+	host: S["host"]
 }
 
 export type Task = {
