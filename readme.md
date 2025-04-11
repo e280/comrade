@@ -126,7 +126,6 @@ cluster.terminate()
 ## *NOW LETS GET MORE ORGANIZED!*
 
 ### *SPLIT FUNCTIONS INTO SEPARATE FILES!*
-
 ```ts
 // work.ts
 export const setupWork = Comrade.work<MySchematic>((host, rig) => {
@@ -138,7 +137,6 @@ export const setupWork = Comrade.work<MySchematic>((host, rig) => {
   },
 })
 ```
-
 ```ts
 // host.ts
 export const setupHost = Comrade.host<MySchematic>((work, rig) => {
@@ -151,8 +149,18 @@ export const setupHost = Comrade.host<MySchematic>((work, rig) => {
 })
 ```
 
-### *NOW IT'S EASY TO SETUP MOCKS!*
+### *USE THESE IN YOUR WORKER AND CLUSTER!*
+```ts
+await Comrade.worker<MySchematic>(setupWork)
+```
+```ts
+const cluster = await Comrade.cluster<MySchematic>({
+  workerUrl,
+  setupHost,
+})
+```
 
+### *MOCKS ARE EASY!*
 ```ts
 // mocks.ts
 import {setupWork} from "./work.js"
