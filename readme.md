@@ -155,7 +155,14 @@ export const setupHost = Comrade.host<MySchematic>((work, rig) => {
 
 ```ts
 // mocks.ts
-export const {work, host} = Comrade.mocks<MySchematic>({})
+import {setupWork} from "./work.js"
+import {setupHost} from "./host.js"
+
+export const {work, host} = Comrade.mocks<MySchematic>({
+  setupWork,
+  setupHost,
+})
+
 await work.add(2, 3) // 5
 await host.mul(2, 3) // 6
 ```
