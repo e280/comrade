@@ -1,8 +1,9 @@
 
-import {mock, Remote, Rig} from "renraku"
+import {mock, Rig} from "renraku"
 import {worker} from "./worker.js"
 import {Cluster} from "./cluster.js"
 import {Thread} from "./parts/thread.js"
+import {HostShell, WorkShell} from "./parts/shells.js"
 import {Mocks, Schematic, SetupHost, SetupWork} from "./parts/types.js"
 
 export const Comrade = {
@@ -21,13 +22,26 @@ export const Comrade = {
 
 		const {setupWork, setupHost} = options
 
-		let work!: Remote<S["work"]>
-		let host!: Remote<S["host"]>
+		const hostShell = new HostShell<S>()
+		const workShell = new WorkShell<S>()
 
-		work = mock(setupWork(host, new Rig()))
-		host = mock(setupHost(work, new Rig()))
+		workShell.work = mock(setupWork(hostShell, new Rig()))
+		hostShell.host = mock(setupHost(workShell, new Rig()))
 
-		return {work, host}
+		return {work: workShell.work, host: hostShell.host}
+	},
+
+	mockWork: <S extends Schematic>(setupWork: SetupWork<S>) => {
+		const hostShell = new HostShell<S>()
+		const workShell = new WorkShell<S>()
+		workShell.work = mock(setupWork(hostShell, new Rig()))
+		return {
+			work: workShell.work,
+			mockHost: (setupHost: SetupHost<S>) => {
+				hostShell.host = mock(setupHost(workShell, new Rig()))
+				return {work: workShell.work, host: hostShell.host}
+			},
+		}
 	},
 }
 

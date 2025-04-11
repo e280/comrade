@@ -1,5 +1,6 @@
 
 import {deferPromise, endpoint, Messenger} from "renraku"
+import {WorkShell} from "./shells.js"
 import {CompatWorker, loadWorker} from "./compat.js"
 import {Meta, Schematic, ThreadOptions} from "./types.js"
 
@@ -23,7 +24,7 @@ export class Thread<S extends Schematic> {
 			timeout: options.timeout ?? Infinity,
 			getLocalEndpoint: (remote, rig) => endpoint({
 				meta,
-				host: options.setupHost(remote, rig),
+				host: options.setupHost(new WorkShell(remote), rig),
 			}),
 		})
 

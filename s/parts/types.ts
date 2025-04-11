@@ -1,5 +1,6 @@
 
 import {AsFns, Fns, JsonRpc, Remote, Rig, DeferPromise} from "renraku"
+import { HostShell, WorkShell } from "./shells.js"
 
 /** a schematic requires devs to define functionality on both sides */
 export type Schematic = {
@@ -10,9 +11,8 @@ export type Schematic = {
 /** keeps your schematic honest */
 export type AsSchematic<S extends Schematic> = S
 
-export type Setup<F extends Fns, R extends Fns> = (remote: Remote<R>, rig: Rig) => F
-export type SetupWork<S extends Schematic> = Setup<S["work"], S["host"]>
-export type SetupHost<S extends Schematic> = Setup<S["host"], S["work"]>
+export type SetupWork<S extends Schematic> = (shell: HostShell<S>, rig: Rig) => S["work"]
+export type SetupHost<S extends Schematic> = (shell: WorkShell<S>, rig: Rig) => S["host"]
 
 export type ThreadOptions<S extends Schematic> = {
 	label: string
@@ -47,8 +47,8 @@ export type Task = {
 	prom: DeferPromise<JsonRpc.Response | null>
 }
 
-export type Work<S extends Schematic> = S["work"]
-export type Host<S extends Schematic> = S["host"]
+export type Work<S extends Schematic> = Remote<S["work"]>
+export type Host<S extends Schematic> = Remote<S["host"]>
 
 export type Mocks<S extends Schematic> = {
 	work: Remote<S["work"]>

@@ -68,7 +68,7 @@ export type MySchematic = AsSchematic<{
 import {Comrade} from "@e280/comrade"
 import {MySchematic} from "./schematic.js"
 
-const host = await Comrade.worker<MySchematic>((host, rig) => ({
+const host = await Comrade.worker<MySchematic>((shell, rig) => ({
   async add(a, b) {
     return a + b
   },
@@ -83,11 +83,11 @@ await host.div(6, 2) // 3
 ```
 - 💁 *note — each side can call the other*
   > ```ts
-  > await Comrade.worker<MySchematic>((host, rig) => ({
+  > await Comrade.worker<MySchematic>((shell, rig) => ({
   >   async add(a, b) {
   > 
   >     // we can call the host functions
-  >     await host.mul(2, 3) // 6
+  >     await shell.host.mul(2, 3) // 6
   > 
   >     return a + b
   >   },
@@ -109,7 +109,7 @@ here's two ways to talk to the worker
     workerUrl: new URL("./worker.js", import.meta.url),
 
     // functions on the main thread, workers can call these
-    setupHost: (work, rig) => ({
+    setupHost: (shell, rig) => ({
       async mul(a: number, b: number) {
         return a * b
       },
@@ -139,7 +139,7 @@ here's two ways to talk to the worker
     workerUrl: new URL("./worker.js", import.meta.url),
 
     // functions on the main thread, workers can call these
-    setupHost: (work, rig) => ({
+    setupHost: (shell, rig) => ({
       async mul(a: number, b: number) {
         return a * b
       },
@@ -164,7 +164,7 @@ we can split our functions into separate files
 
 ```ts
 // work.ts
-export const setupWork = Comrade.work<MySchematic>((host, rig) => {
+export const setupWork = Comrade.work<MySchematic>((shell, rig) => {
   async add(a, b) {
     return a + b
   },
@@ -176,7 +176,7 @@ export const setupWork = Comrade.work<MySchematic>((host, rig) => {
 
 ```ts
 // host.ts
-export const setupHost = Comrade.host<MySchematic>((work, rig) => {
+export const setupHost = Comrade.host<MySchematic>((shell, rig) => {
   async mul(a: number, b: number) {
     return a * b
   },
@@ -231,7 +231,7 @@ await cluster.work.hello[tune]({transfer: [data]})({
 that's good for outgoing requests, but now you also need to set transferables for your responses, which is done like this
 
 ```ts
-await Comrade.worker<MySchematic>((host, rig) => ({
+await Comrade.worker<MySchematic>((shell, rig) => ({
   async coolAction() {
     const data = new Uint8Array([0xDE, 0xAD, 0xBE, 0xEF])
 
