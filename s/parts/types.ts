@@ -47,6 +47,9 @@ export type Task = {
 	prom: DeferPromise<JsonRpc.Response | null>
 }
 
+export type Work<S extends Schematic> = S["work"]
+export type Host<S extends Schematic> = S["host"]
+
 export type Mocks<S extends Schematic> = {
 	work: Remote<S["work"]>
 	host: Remote<S["host"]>
