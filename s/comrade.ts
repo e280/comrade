@@ -3,7 +3,7 @@ import {mock, Remote, Rig} from "renraku"
 import {worker} from "./worker.js"
 import {Cluster} from "./cluster.js"
 import {Thread} from "./parts/thread.js"
-import {Schematic, SetupHost, SetupWork} from "./parts/types.js"
+import {Mocks, Schematic, SetupHost, SetupWork} from "./parts/types.js"
 
 export const Comrade = {
 	work: <S extends Schematic>(fn: SetupWork<S>) => fn,
@@ -17,7 +17,7 @@ export const Comrade = {
 	mocks: <S extends Schematic>(options: {
 			setupWork: SetupWork<S>
 			setupHost: SetupHost<S>
-		}) => {
+		}): Mocks<S> => {
 
 		const {setupWork, setupHost} = options
 
@@ -27,7 +27,7 @@ export const Comrade = {
 		work = mock(setupWork(host, new Rig()))
 		host = mock(setupHost(work, new Rig()))
 
-		return {host, work}
+		return {work, host}
 	},
 }
 
