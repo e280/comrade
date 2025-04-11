@@ -254,3 +254,8 @@ await cluster.work.goodbye[tune]({notify: true})({
 })
 ```
 
+<br/>
+
+## 💖 Made with open source love
+build with us at https://e280.org/ but only if you're cool
+
