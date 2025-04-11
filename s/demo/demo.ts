@@ -4,7 +4,7 @@
 import {Cluster} from "../cluster.js"
 import {MySchematic} from "./schematic.js"
 
-const cluster = await Cluster.setup<MySchematic>({
+const cluster = await Cluster.make<MySchematic>({
 	workerUrl: new URL("./math.worker.js", import.meta.url),
 	setupHost: () => ({
 		async mul(a: number, b: number) {

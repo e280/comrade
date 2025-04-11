@@ -14,13 +14,20 @@ export type Setup<F extends Fns, R extends Fns> = (remote: Remote<R>, rig: Rig) 
 export type SetupWork<S extends Schematic> = Setup<S["work"], S["host"]>
 export type SetupHost<S extends Schematic> = Setup<S["host"], S["work"]>
 
+export type ThreadOptions<S extends Schematic> = {
+	label: string
+	workerUrl: string | URL
+	setupHost: SetupHost<S>
+	timeout?: number
+}
+
 /** options for the worker cluster */
-export type Options<S extends Schematic> = {
+export type ClusterOptions<S extends Schematic> = {
 	workerUrl: string | URL
 	setupHost: SetupHost<S>
 	label?: string
-	timeout?: number
 	workerCount?: number
+	timeout?: number
 }
 
 /** internal systemic functionality that lives on the main thread */

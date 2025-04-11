@@ -1,9 +1,7 @@
 
 import {deferPromise, Endpoint, remote, Remote} from "renraku"
-
 import {Thread} from "./parts/thread.js"
-import {Options, Schematic, Task} from "./parts/types.js"
-import {establishThreads} from "./parts/establish-threads.js"
+import {ClusterOptions, Schematic, Task} from "./parts/types.js"
 
 /**
  * a pool of web workers
@@ -11,8 +9,18 @@ import {establishThreads} from "./parts/establish-threads.js"
  *  - call your worker functions like `await cluster.remote.hello()`
  */
 export class Cluster<S extends Schematic> {
-	static async setup<S extends Schematic>(options: Options<S>) {
-		const threads = await establishThreads<S>(options)
+	static guessThreadCount() {
+		return Math.max(1, navigator.hardwareConcurrency - 1)
+	}
+
+	static async make<S extends Schematic>(options: ClusterOptions<S>) {
+		const workerCount = options.workerCount ?? this.guessThreadCount()
+		const threads = await Promise.all([...Array(workerCount)].map(
+			async(_, index) => Thread.make({
+				...options,
+				label: options.label ?? `${options.label ?? "comrade"}_${index + 1}`,
+			})
+		))
 		return new this<S>(threads)
 	}
 

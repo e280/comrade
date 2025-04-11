@@ -3,20 +3,21 @@
 
 <br/>
 
-# ☭ COMRADE
+# Comrade
 
-## *WEB-WORKERS OF THE WORLD UNITE!*
-- async function calls are magically scheduled across available web workers
-- it's *bidirectional!* you call worker functions — and worker functions call you
-- works in browsers and node
-- thread communication powered by [renraku](https://github.com/chase-moskal/renraku)
+## Web-workers of the world unite!
+- comrade aims to be the best web worker library for typescript
+- bidirectional by default — you can call worker functions, and they can call you
+- clusters can magically schedule async calls across web workers
+- seamless browser and node compatibility
+- async rpc powered by [renraku](https://github.com/chase-moskal/renraku)
 
-### *INSTALL COMRADE!*
+### Install comrade
 ```sh
 npm i @e280/comrade
 ```
 
-### *MAKE YOUR SCHEMATIC TYPE!*
+### Make your schematic type
 ```ts
 // schematic.ts
 
@@ -57,7 +58,7 @@ export type MySchematic = AsSchematic<{
   > await work.nesty.is.besty.sub(3, 2) // 1
   > ```
 
-### *MAKE YOUR WORKER!*
+### Make your worker
 ```ts
 // worker.ts
 
@@ -90,42 +91,74 @@ await host.div(6, 2) // 3
   > })
   > ```
 
-### *MAKE YOUR CLUSTER!*
-```ts
-// cluster.ts
+### Do the work
+here's two ways to talk to the worker
+- **spin up a single worker thread**
+  ```ts
+  // thread.ts
 
-import Comrade from "@e280/comrade"
-import {MySchematic} from "./schematic.js"
+  import Comrade from "@e280/comrade"
+  import {MySchematic} from "./schematic.js"
 
-const cluster = await Comrade.cluster<MySchematic>({
+  const thread = await Comrade.thread<MySchematic>({
 
-  // relative url to your worker module
-  workerUrl: new URL("./worker.js", import.meta.url),
+    // relative url to your worker module
+    workerUrl: new URL("./worker.js", import.meta.url),
 
-  // functions on the main thread, workers can call these
-  setupHost: (work, rig) => ({
-    async mul(a: number, b: number) {
-      return a * b
-    },
-    async div(a: number, b: number) {
-      return a / b
-    },
-  }),
-})
+    // functions on the main thread, workers can call these
+    setupHost: (work, rig) => ({
+      async mul(a: number, b: number) {
+        return a * b
+      },
+      async div(a: number, b: number) {
+        return a / b
+      },
+    }),
+  })
 
-// calling a worker functions
-await cluster.work.add(2, 3) // 5
-await cluster.work.sub(3, 2) // 1
+  // calling a worker functions
+  await thread.work.add(2, 3) // 5
+  await thread.work.sub(3, 2) // 1
 
-// terminate the workers when you're all done
-cluster.terminate()
-```
+  // terminate the workers when you're all done
+  thread.terminate()
+  ```
+- **spin up a cluster of workers**
+  ```ts
+  // cluster.ts
+
+  import Comrade from "@e280/comrade"
+  import {MySchematic} from "./schematic.js"
+
+  const cluster = await Comrade.cluster<MySchematic>({
+
+    // relative url to your worker module
+    workerUrl: new URL("./worker.js", import.meta.url),
+
+    // functions on the main thread, workers can call these
+    setupHost: (work, rig) => ({
+      async mul(a: number, b: number) {
+        return a * b
+      },
+      async div(a: number, b: number) {
+        return a / b
+      },
+    }),
+  })
+
+  // calling a worker functions
+  await cluster.work.add(2, 3) // 5
+  await cluster.work.sub(3, 2) // 1
+
+  // terminate the workers when you're all done
+  cluster.terminate()
+  ```
 
 <br/>
 
-## *NOW LETS GET MORE ORGANIZED!*
+## Now let's get more organized
+we can split our functions into separate files
 
-### *SPLIT FUNCTIONS INTO SEPARATE FILES!*
 ```ts
 // work.ts
 export const setupWork = Comrade.work<MySchematic>((host, rig) => {
@@ -137,6 +170,7 @@ export const setupWork = Comrade.work<MySchematic>((host, rig) => {
   },
 })
 ```
+
 ```ts
 // host.ts
 export const setupHost = Comrade.host<MySchematic>((work, rig) => {
@@ -149,15 +183,18 @@ export const setupHost = Comrade.host<MySchematic>((work, rig) => {
 })
 ```
 
-### *USE THESE IN YOUR WORKER AND CLUSTER!*
+use these in your workers, threads, or clusters
 ```ts
 await Comrade.worker<MySchematic>(setupWork)
+```
+```ts
+const thread = await Comrade.thread<MySchematic>({workerUrl, setupHost})
 ```
 ```ts
 const cluster = await Comrade.cluster<MySchematic>({workerUrl, setupHost})
 ```
 
-### *MOCKS ARE EASY!*
+### Mocks are easy
 ```ts
 // mocks.ts
 import {setupWork} from "./work.js"
@@ -171,10 +208,10 @@ await host.mul(2, 3) // 6
 
 <br/>
 
-## *TUNE THE CALLS!*
+## Tune the calls
 this advancedness is brought to you by [renraku](https://github.com/chase-moskal/renraku)
 
-### *TRANSFERABLES AREN'T COPIED!*
+### Transferables aren't copied
 you can provide an array of transferables on any api call
 
 ```ts
@@ -203,7 +240,7 @@ await Comrade.worker<MySchematic>((host, rig) => ({
 }))
 ```
 
-### *NOTIFICATIONS GET NO RESPONSE!*
+### Notifications get no response
 you can also make a call a *notification*, which means no response will be sent back (just shouting into the void)
 
 ```ts
