@@ -65,7 +65,7 @@ export type MySchematic = AsSchematic<{
 ```ts
 // worker.ts
 
-import Comrade from "@e280/comrade"
+import {Comrade} from "@e280/comrade"
 import {MySchematic} from "./schematic.js"
 
 const host = await Comrade.worker<MySchematic>((host, rig) => ({
@@ -100,7 +100,7 @@ here's two ways to talk to the worker
   ```ts
   // thread.ts
 
-  import Comrade from "@e280/comrade"
+  import {Comrade} from "@e280/comrade"
   import {MySchematic} from "./schematic.js"
 
   const thread = await Comrade.thread<MySchematic>({
@@ -130,7 +130,7 @@ here's two ways to talk to the worker
   ```ts
   // cluster.ts
 
-  import Comrade from "@e280/comrade"
+  import {Comrade} from "@e280/comrade"
   import {MySchematic} from "./schematic.js"
 
   const cluster = await Comrade.cluster<MySchematic>({
