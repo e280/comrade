@@ -4,14 +4,16 @@
 <br/>
 
 # 🤖 Comrade
-
-## Web-workers of the world unite!
 - comrade aims to be the best web worker library for typescript
 - bidirectional by default — you can call worker functions, and they can call you
 - clusters can magically schedule async calls across web workers
 - seamless browser and node compatibility
 - async rpc powered by [renraku](https://github.com/chase-moskal/renraku)
 - a project for https://e280.org/
+
+<br/>
+
+## Web-workers of the world unite!
 
 ### Install comrade
 ```sh
