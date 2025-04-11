@@ -3,7 +3,7 @@
 
 <br/>
 
-# Comrade
+# 🤖 Comrade
 
 ## Web-workers of the world unite!
 - comrade aims to be the best web worker library for typescript
@@ -11,6 +11,7 @@
 - clusters can magically schedule async calls across web workers
 - seamless browser and node compatibility
 - async rpc powered by [renraku](https://github.com/chase-moskal/renraku)
+- a project for https://e280.org/
 
 ### Install comrade
 ```sh
