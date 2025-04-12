@@ -1,6 +1,6 @@
 
+import {HostShell, WorkShell} from "./shells.js"
 import {AsFns, Fns, JsonRpc, Remote, Rig, DeferPromise} from "renraku"
-import { HostShell, WorkShell } from "./shells.js"
 
 /** a schematic requires devs to define functionality on both sides */
 export type Schematic = {
