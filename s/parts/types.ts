@@ -21,10 +21,14 @@ export type ThreadOptions<S extends Schematic> = {
 	timeout?: number
 }
 
-/** options for the worker cluster */
-export type ClusterOptions<S extends Schematic> = {
+export type ClusterParams<S extends Schematic> = ClusterRequirements<S> & ClusterOptions
+
+export type ClusterRequirements<S extends Schematic> = {
 	workerUrl: string | URL
 	setupHost: SetupHost<S>
+}
+
+export type ClusterOptions = {
 	label?: string
 	workerCount?: number
 	timeout?: number
@@ -51,7 +55,9 @@ export type Work<S extends Schematic> = Remote<S["work"]>
 export type Host<S extends Schematic> = Remote<S["host"]>
 
 export type Mocks<S extends Schematic> = {
-	work: Remote<S["work"]>
-	host: Remote<S["host"]>
+	workShell: WorkShell<S>
+	hostShell: HostShell<S>
+	work: Work<S>
+	host: Host<S>
 }
 

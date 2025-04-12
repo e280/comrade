@@ -220,11 +220,11 @@ you can provide an array of transferables on any api call
 ```ts
 import {tune} from "@e280/comrade"
 
-const data = new Uint8Array([0xDE, 0xAD, 0xBE, 0xEF])
+const buffer = new Uint8Array([0xDE, 0xAD, 0xBE, 0xEF]).buffer
 
-await cluster.work.hello[tune]({transfer: [data]})({
+await cluster.work.hello[tune]({transfer: [buffer]})({
   lol: "whatever",
-  data, // <-- this gets transfered speedy-fastly, not copied (we like this)
+  buffer, // <-- this gets transfered speedy-fastly, not copied (we like this)
 })
 ```
 
@@ -233,12 +233,12 @@ that's good for outgoing requests, but now you also need to set transferables fo
 ```ts
 await Comrade.worker<MySchematic>((shell, rig) => ({
   async coolAction() {
-    const data = new Uint8Array([0xDE, 0xAD, 0xBE, 0xEF])
+    const buffer = new Uint8Array([0xDE, 0xAD, 0xBE, 0xEF]).buffer
 
     // set transferables for this response
-    rig.transfer = [data] // <-- will be transferred, not copied
+    rig.transfer = [buffer] // <-- will be transferred, not copied
 
-    return {hello: "world", data}
+    return {hello: "world", buffer}
   },
 }))
 ```

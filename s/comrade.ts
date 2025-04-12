@@ -10,10 +10,11 @@ export const Comrade = {
 	work: <S extends Schematic>(fn: SetupWork<S>) => fn,
 	host: <S extends Schematic>(fn: SetupHost<S>) => fn,
 
-	worker,
+	Thread,
 	Cluster,
-	thread: Thread.make,
-	cluster: Cluster.make,
+	thread: Thread.make.bind(Thread),
+	cluster: Cluster.make.bind(Cluster),
+	worker,
 
 	mocks: <S extends Schematic>(options: {
 			setupWork: SetupWork<S>
@@ -28,7 +29,12 @@ export const Comrade = {
 		workShell.work = mock(setupWork(hostShell, new Rig()))
 		hostShell.host = mock(setupHost(workShell, new Rig()))
 
-		return {work: workShell.work, host: hostShell.host}
+		return {
+			workShell,
+			hostShell,
+			work: workShell.work,
+			host: hostShell.host,
+		}
 	},
 
 	mockWork: <S extends Schematic>(setupWork: SetupWork<S>) => {
@@ -36,10 +42,17 @@ export const Comrade = {
 		const workShell = new WorkShell<S>()
 		workShell.work = mock(setupWork(hostShell, new Rig()))
 		return {
+			workShell,
+			hostShell,
 			work: workShell.work,
-			mockHost: (setupHost: SetupHost<S>) => {
+			mockHost: (setupHost: SetupHost<S>): Mocks<S> => {
 				hostShell.host = mock(setupHost(workShell, new Rig()))
-				return {work: workShell.work, host: hostShell.host}
+				return {
+					workShell,
+					hostShell,
+					work: workShell.work,
+					host: hostShell.host,
+				}
 			},
 		}
 	},

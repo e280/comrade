@@ -47,3 +47,10 @@ export async function loadWorker(url: string | URL, name: string | undefined) {
 	} as CompatWorker
 }
 
+export async function guessOptimalThreadCount() {
+	const count = (!isNode())
+		? (navigator.hardwareConcurrency ?? 1)
+		: ((await import("os")).cpus().length ?? 1)
+	return Math.max(1, count - 1)
+}
+
