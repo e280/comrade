@@ -16,6 +16,7 @@
 		"_links": "ln -s \"$(realpath s/index.html)\" x/index.html && ln -s \"$(realpath node_modules)\" x/node_modules",
 		"_tsc": "tsc",
 		"start": "vite --port 8080 --config vite.config.mjs",
+		"count": "find s -path '*/_archive' -prune -o -name '*.ts' -exec wc -l {} +",
 		"test": "node x/demo/demo.js && node x/demo/demo-mocks.js"
 	},
 	"dependencies": {
