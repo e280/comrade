@@ -42,6 +42,10 @@ export class Cluster<S extends Schematic> {
 		threads.forEach(t => this.#available.add(t))
 	}
 
+	get threadCount() {
+		return this.threads.length
+	}
+
 	terminate() {
 		for (const thread of this.threads)
 			thread.terminate()
