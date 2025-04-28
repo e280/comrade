@@ -16,7 +16,7 @@ export function wrapNodeChannel(nodeChannel: NodeChannel): PostableChannel {
 	return {
 		postMessage: (m, t) => nodeChannel.postMessage(m, t as any),
 		addEventListener: (_e, fn) => {
-			const actual = (m: any) => fn({data: m})
+			const actual = (m: any) => fn({data: m, origin: ""})
 			fns.set(fn, actual)
 			nodeChannel.on("message", actual)
 		},

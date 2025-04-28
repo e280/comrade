@@ -1,5 +1,7 @@
 
-import {deferPromise, Endpoint, remote, Remote} from "renraku"
+import {deferPromise} from "@e280/stz"
+import {Endpoint, remote, Remote} from "renraku"
+
 import {Thread} from "./parts/thread.js"
 import {guessOptimalThreadCount} from "./parts/compat.js"
 import {ClusterParams, Schematic, Task} from "./parts/types.js"

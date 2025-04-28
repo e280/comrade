@@ -1,6 +1,7 @@
 
+import { DeferredPromise } from "@e280/stz"
 import {HostShell, WorkShell} from "./shells.js"
-import {AsFns, Fns, JsonRpc, Remote, Rig, DeferPromise} from "renraku"
+import {AsFns, Fns, JsonRpc, Remote, Rig} from "renraku"
 
 /** a schematic requires devs to define functionality on both sides */
 export type Schematic = {
@@ -48,7 +49,7 @@ export type MinistryFns<S extends Schematic> = {
 export type Task = {
 	request: JsonRpc.Request
 	transfer: Transferable[] | undefined
-	prom: DeferPromise<JsonRpc.Response | null>
+	prom: DeferredPromise<JsonRpc.Response | null>
 }
 
 export type Work<S extends Schematic> = Remote<S["work"]>

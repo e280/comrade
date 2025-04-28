@@ -1,5 +1,7 @@
 
-import {deferPromise, endpoint, Messenger} from "renraku"
+import {deferPromise} from "@e280/stz"
+import {endpoint, Messenger, PostableConduit} from "renraku"
+
 import {WorkShell} from "./shells.js"
 import {CompatWorker, loadWorker} from "./compat.js"
 import {Meta, Schematic, ThreadOptions} from "./types.js"
@@ -22,13 +24,12 @@ export class Thread<S extends Schematic> {
 
 		const messenger = new Messenger<S["work"]>({
 			timeout: options.timeout ?? Infinity,
+			conduit: new PostableConduit(worker),
 			getLocalEndpoint: (remote, rig) => endpoint({
 				meta,
 				host: options.setupHost(new WorkShell(remote), rig),
 			}),
 		})
-
-		messenger.attach(worker)
 
 		await readyprom.promise
 		return new this<S>(worker, messenger)
