@@ -12,12 +12,16 @@
 	],
 	"scripts": {
 		"build": "run-s _clean _links _tsc",
+		"watch": "run-p _tsc-watch _test-watch",
 		"_clean": "rm -rf x && mkdir x",
 		"_links": "ln -s \"$(realpath s/index.html)\" x/index.html && ln -s \"$(realpath node_modules)\" x/node_modules",
 		"_tsc": "tsc",
+		"_tsc-watch": "tsc --watch",
 		"start": "vite --port 8080 --config vite.config.mjs",
 		"count": "find s -path '*/_archive' -prune -o -name '*.ts' -exec wc -l {} +",
-		"test": "node x/demo/demo.js && node x/demo/demo-mocks.js"
+		"test": "node x/tests.test.js --verbose",
+		"_test-watch": "node --watch x/tests.test.js --verbose",
+		"_test-debug": "node inspect x/tests.test.js"
 	},
 	"dependencies": {
 		"@e280/stz": "^0.0.0-5",
