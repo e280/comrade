@@ -34,6 +34,13 @@ export async function getSelf() {
 		: self
 }
 
+export async function guessOptimalThreadCount() {
+	const count = (!isNode())
+		? (navigator.hardwareConcurrency ?? 1)
+		: ((await import("os")).cpus().length ?? 1)
+	return Math.max(1, count - 1)
+}
+
 export async function loadWorker(url: string | URL, name: string | undefined) {
 	if (!isNode())
 		return new window.Worker(url, {name, type: "module"}) as CompatWorker
@@ -47,10 +54,14 @@ export async function loadWorker(url: string | URL, name: string | undefined) {
 	} as CompatWorker
 }
 
-export async function guessOptimalThreadCount() {
-	const count = (!isNode())
-		? (navigator.hardwareConcurrency ?? 1)
-		: ((await import("os")).cpus().length ?? 1)
-	return Math.max(1, count - 1)
+export async function loadWasm(url: string | URL) {
+	if (isNode()) {
+		const fs = await import("fs/promises")
+		const buffer = await fs.readFile(url)
+		return await WebAssembly.instantiate(buffer)
+	}
+	else {
+		return await WebAssembly.instantiateStreaming(fetch(url))
+	}
 }
 

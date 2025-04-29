@@ -3,6 +3,7 @@ import {mock, Rig} from "renraku"
 import {worker} from "./worker.js"
 import {Cluster} from "./cluster.js"
 import {Thread} from "./parts/thread.js"
+import {loadWasm, loadWorker} from "./parts/compat.js"
 import {HostShell, WorkShell} from "./parts/shells.js"
 import {Mocks, Schematic, SetupHost, SetupWork} from "./parts/types.js"
 
@@ -10,11 +11,14 @@ export const Comrade = {
 	work: <S extends Schematic>(fn: SetupWork<S>) => fn,
 	host: <S extends Schematic>(fn: SetupHost<S>) => fn,
 
+	loadWasm: loadWasm,
+	loadWorker: loadWorker,
+
+	worker,
 	Thread,
 	Cluster,
 	thread: Thread.make.bind(Thread),
 	cluster: Cluster.make.bind(Cluster),
-	worker,
 
 	mocks: <S extends Schematic>(options: {
 			setupWork: SetupWork<S>
