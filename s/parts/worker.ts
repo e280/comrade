@@ -1,9 +1,9 @@
 
 import {endpoint, Messenger, PostableConduit} from "renraku"
 
-import {getSelf} from "./parts/compat.js"
-import {HostShell} from "./parts/shells.js"
-import {MinistryFns, Schematic, SetupWork} from "./parts/types.js"
+import {getSelf} from "./compat.js"
+import {HostShell} from "./shells.js"
+import {MinistryFns, Schematic, SetupWork} from "./types.js"
 
 /**
  * create a web worker

@@ -1,64 +1,61 @@
 
 import {mock, Rig} from "renraku"
-import {worker} from "./worker.js"
-import {Cluster} from "./cluster.js"
+import {Cluster} from "./parts/cluster.js"
 import {Thread} from "./parts/thread.js"
-import {loadWasm, loadWorker} from "./parts/compat.js"
 import {HostShell, WorkShell} from "./parts/shells.js"
 import {Mocks, Schematic, SetupHost, SetupWork} from "./parts/types.js"
 
-export const Comrade = {
-	work: <S extends Schematic>(fn: SetupWork<S>) => fn,
-	host: <S extends Schematic>(fn: SetupHost<S>) => fn,
+export {worker} from "./parts/worker.js"
+export {Cluster} from "./parts/cluster.js"
+export {Thread} from "./parts/thread.js"
+export {loadWasm, loadWorker} from "./parts/compat.js"
 
-	loadWasm: loadWasm,
-	loadWorker: loadWorker,
+export const thread = Thread.make.bind(Thread)
+export const cluster = Cluster.make.bind(Cluster)
 
-	worker,
-	Thread,
-	Cluster,
-	thread: Thread.make.bind(Thread),
-	cluster: Cluster.make.bind(Cluster),
+export const work = <S extends Schematic>(fn: SetupWork<S>) => fn
+export const host = <S extends Schematic>(fn: SetupHost<S>) => fn
 
-	mocks: <S extends Schematic>(options: {
-			setupWork: SetupWork<S>
-			setupHost: SetupHost<S>
-		}): Mocks<S> => {
+export function mocks<S extends Schematic>(options: {
+		setupWork: SetupWork<S>
+		setupHost: SetupHost<S>
+	}): Mocks<S> {
 
-		const {setupWork, setupHost} = options
+	const {setupWork, setupHost} = options
 
-		const hostShell = new HostShell<S>()
-		const workShell = new WorkShell<S>()
+	const hostShell = new HostShell<S>()
+	const workShell = new WorkShell<S>()
 
-		workShell.work = mock(setupWork(hostShell, new Rig()))
-		hostShell.host = mock(setupHost(workShell, new Rig()))
+	workShell.work = mock(setupWork(hostShell, new Rig()))
+	hostShell.host = mock(setupHost(workShell, new Rig()))
 
-		return {
-			workShell,
-			hostShell,
-			work: workShell.work,
-			host: hostShell.host,
-		}
-	},
+	return {
+		workShell,
+		hostShell,
+		work: workShell.work,
+		host: hostShell.host,
+	}
+}
 
-	mockWork: <S extends Schematic>(setupWork: SetupWork<S>) => {
-		const hostShell = new HostShell<S>()
-		const workShell = new WorkShell<S>()
-		workShell.work = mock(setupWork(hostShell, new Rig()))
-		return {
-			workShell,
-			hostShell,
-			work: workShell.work,
-			mockHost: (setupHost: SetupHost<S>): Mocks<S> => {
-				hostShell.host = mock(setupHost(workShell, new Rig()))
-				return {
-					workShell,
-					hostShell,
-					work: workShell.work,
-					host: hostShell.host,
-				}
-			},
-		}
-	},
+export function mockWork<S extends Schematic>(setupWork: SetupWork<S>) {
+	const hostShell = new HostShell<S>()
+	const workShell = new WorkShell<S>()
+
+	workShell.work = mock(setupWork(hostShell, new Rig()))
+
+	return {
+		workShell,
+		hostShell,
+		work: workShell.work,
+		mockHost: (setupHost: SetupHost<S>): Mocks<S> => {
+			hostShell.host = mock(setupHost(workShell, new Rig()))
+			return {
+				workShell,
+				hostShell,
+				work: workShell.work,
+				host: hostShell.host,
+			}
+		},
+	}
 }
 

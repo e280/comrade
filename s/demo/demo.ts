@@ -1,7 +1,7 @@
 
 // create a pool of web workers, and call functions on it
 
-import {Cluster} from "../cluster.js"
+import {Cluster} from "../parts/cluster.js"
 import {MySchematic} from "./schematic.js"
 
 const cluster = await Cluster.make<MySchematic>({
