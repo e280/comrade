@@ -1,6 +1,7 @@
 
 import {Science, test, expect} from "@e280/science"
-import {Comrade} from "./comrade.js"
+
+import {Comrade} from "./index.js"
 import {MySchematic} from "./demo/schematic.js"
 
 await Science.run({
