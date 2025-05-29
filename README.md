@@ -41,25 +41,23 @@ export type MySchematic = AsSchematic<{
   }
 }>
 ```
-- 💁 *note — arbitrary nesting is fine, actually*
-  > ```ts
-  > export type MySchematic = AsSchematic<{
-  >   work: {
-  >     add(a: number, b: number): Promise<number>
-  >     nesty: {
-  >       is: {
-  >         besty: {
-  >           sub(a: number, b: number): Promise<number>
-  >         }
-  >       }
-  >     }
-  >   }
-  > }>
-  > ```
-  > ```ts
-  > await work.add(2, 3) // 5
-  > await work.nesty.is.besty.sub(3, 2) // 1
-  > ```
+> 💁 *note — arbitrary nesting is fine, actually*
+> ```ts
+> export type MySchematic = AsSchematic<{
+>   work: {
+>     add(a: number, b: number): Promise<number>
+>     nesty: {
+>       is: {
+>         besty(a: number, b: number): Promise<number>
+>       }
+>     }
+>   }
+> }>
+> ```
+> ```ts
+> await work.add(2, 3) // 5
+> await work.nesty.is.besty(2, 3) // 5
+> ```
 
 ### Make your worker
 ```ts
