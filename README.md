@@ -79,18 +79,18 @@ const host = await Comrade.worker<MySchematic>((shell, rig) => ({
 await host.mul(2, 3) // 6
 await host.div(6, 2) // 3
 ```
-- 💁 *note — each side can call the other*
-  > ```ts
-  > await Comrade.worker<MySchematic>((shell, rig) => ({
-  >   async add(a, b) {
-  > 
-  >     // we can call the host functions
-  >     await shell.host.mul(2, 3) // 6
-  > 
-  >     return a + b
-  >   },
-  > })
-  > ```
+> 💁 *note — each side can call the other*
+> ```ts
+> await Comrade.worker<MySchematic>((shell, rig) => ({
+>   async add(a, b) {
+> 
+>     // we can call the host functions
+>     await shell.host.mul(2, 3) // 6
+> 
+>     return a + b
+>   },
+> })
+> ```
 
 ### Do the work
 here's two ways to talk to the worker
