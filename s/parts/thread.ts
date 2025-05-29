@@ -1,5 +1,5 @@
 
-import {deferPromise} from "@e280/stz"
+import {defer} from "@e280/stz"
 import {endpoint, Messenger, PostableConduit} from "renraku"
 
 import {WorkShell} from "./shells.js"
@@ -14,7 +14,7 @@ export class Thread<S extends Schematic> {
 
 	static async make<S extends Schematic>(options: ThreadOptions<S>) {
 		const worker = await loadWorker(options.workerUrl, options.label)
-		const readyprom = deferPromise<void>()
+		const readyprom = defer<void>()
 
 		const meta: Meta = {
 			async ready() {

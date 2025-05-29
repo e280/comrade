@@ -1,5 +1,5 @@
 
-import { DeferredPromise } from "@e280/stz"
+import {Deferred} from "@e280/stz"
 import {HostShell, WorkShell} from "./shells.js"
 import {AsFns, Fns, JsonRpc, Remote, Rig} from "renraku"
 
@@ -49,7 +49,7 @@ export type MinistryFns<S extends Schematic> = {
 export type Task = {
 	request: JsonRpc.Request
 	transfer: Transferable[] | undefined
-	prom: DeferredPromise<JsonRpc.Response | null>
+	prom: Deferred<JsonRpc.Response | null>
 }
 
 export type Work<S extends Schematic> = Remote<S["work"]>

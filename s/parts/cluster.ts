@@ -1,5 +1,5 @@
 
-import {deferPromise} from "@e280/stz"
+import {defer} from "@e280/stz"
 import {Endpoint, remote, Remote} from "renraku"
 
 import {Thread} from "./thread.js"
@@ -34,7 +34,7 @@ export class Cluster<S extends Schematic> {
 		const remoteEndpoint: Endpoint = async(request, transfer) => this.#scheduleTask({
 			request,
 			transfer,
-			prom: deferPromise(),
+			prom: defer(),
 		})
 
 		// remote proxy to call comrade fns
