@@ -1,6 +1,6 @@
 
 import {defer} from "@e280/stz"
-import {Endpoint, remote, Remote} from "renraku"
+import {Endpoint, remote, Remote} from "@e280/renraku"
 
 import {Thread} from "./thread.js"
 import {guessOptimalThreadCount} from "./compat.js"
@@ -31,14 +31,14 @@ export class Cluster<S extends Schematic> {
 	constructor(private threads: Thread<S>[]) {
 
 		// delegation
-		const remoteEndpoint: Endpoint = async(request, transfer) => this.#scheduleTask({
+		const remoteEndpoint: Endpoint = async(request, special) => this.#scheduleTask({
 			request,
-			transfer,
 			prom: defer(),
+			transfer: special?.transfer,
 		})
 
 		// remote proxy to call comrade fns
-		this.work = remote(remoteEndpoint)
+		this.work = remote({endpoint: remoteEndpoint})
 
 		// in the beginning, all threads are available
 		threads.forEach(t => this.#available.add(t))
@@ -70,7 +70,7 @@ export class Cluster<S extends Schematic> {
 			this.#available.delete(thread)
 
 			// call the thread endpoint
-			const callprom = thread.messenger.remoteEndpoint(task.request, task.transfer)
+			const callprom = thread.messenger.remoteEndpoint(task.request, {transfer: task.transfer})
 
 			// resolve/reject the task prom when callprom is done
 			task.prom.entangle(callprom).finally(() => {

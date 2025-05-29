@@ -1,5 +1,5 @@
 
-import {PostableChannel, ChannelMessage, isNode} from "renraku"
+import {PostableChannel, ChannelMessage, isNode} from "@e280/renraku"
 
 export type CompatWorker = {
 	terminate(): void

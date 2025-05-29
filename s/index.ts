@@ -1,5 +1,5 @@
 
-export * from "renraku"
+export {tune} from "@e280/renraku"
 
 export * from "./parts/cluster.js"
 export * from "./parts/compat.js"

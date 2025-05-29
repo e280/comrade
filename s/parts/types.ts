@@ -1,7 +1,7 @@
 
 import {Deferred} from "@e280/stz"
 import {HostShell, WorkShell} from "./shells.js"
-import {AsFns, Fns, JsonRpc, Remote, Rig} from "renraku"
+import {AsFns, Fns, JsonRpc, Remote, Rig} from "@e280/renraku"
 
 /** a schematic requires devs to define functionality on both sides */
 export type Schematic = {

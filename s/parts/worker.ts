@@ -1,5 +1,5 @@
 
-import {endpoint, Messenger, PostableConduit} from "renraku"
+import {endpoint, Messenger, PostableConduit} from "@e280/renraku"
 
 import {getSelf} from "./compat.js"
 import {HostShell} from "./shells.js"
@@ -16,12 +16,12 @@ export async function worker<S extends Schematic>(
 	const messenger = new Messenger<MinistryFns<S>>({
 		timeout: options.timeout ?? Infinity,
 		conduit: new PostableConduit(await getSelf()),
-		getLocalEndpoint: (remote, rig) => endpoint(
-			setupWork(
+		getLocalEndpoint: (remote, rig) => endpoint({
+			fns: setupWork(
 				new HostShell(remote.host),
 				rig,
 			)
-		),
+		}),
 	})
 
 	await messenger.remote.meta.ready()

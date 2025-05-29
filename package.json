@@ -12,7 +12,7 @@
 	],
 	"scripts": {
 		"build": "run-s _clean _links _tsc",
-		"watch": "run-p _tsc-watch _test-watch",
+		"watch": "run-p _tsc-watch test-watch",
 		"_clean": "rm -rf x && mkdir x",
 		"_links": "ln -s \"$(realpath s/index.html)\" x/index.html && ln -s \"$(realpath node_modules)\" x/node_modules",
 		"_tsc": "tsc",
@@ -23,14 +23,9 @@
 		"test-watch": "node --watch x/tests.test.js",
 		"test-debug": "node inspect x/tests.test.js"
 	},
-	"overrides": {
-		"renraku": {
-			"@e280/stz": "0.0.0-5"
-		}
-	},
 	"dependencies": {
-		"@e280/stz": "^0.0.0-22",
-		"renraku": "^0.5.0-11"
+		"@e280/renraku": "^0.5.0-14",
+		"@e280/stz": "^0.0.0-22"
 	},
 	"devDependencies": {
 		"@e280/science": "^0.0.5",

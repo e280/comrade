@@ -1,7 +1,7 @@
 
-import {mock, Rig} from "renraku"
-import {Cluster} from "./parts/cluster.js"
+import {mock, Rig} from "@e280/renraku"
 import {Thread} from "./parts/thread.js"
+import {Cluster} from "./parts/cluster.js"
 import {HostShell, WorkShell} from "./parts/shells.js"
 import {Mocks, Schematic, SetupHost, SetupWork} from "./parts/types.js"
 
@@ -26,8 +26,8 @@ export function mocks<S extends Schematic>(options: {
 	const hostShell = new HostShell<S>()
 	const workShell = new WorkShell<S>()
 
-	workShell.work = mock(setupWork(hostShell, new Rig()))
-	hostShell.host = mock(setupHost(workShell, new Rig()))
+	workShell.work = mock({fns: setupWork(hostShell, new Rig())})
+	hostShell.host = mock({fns: setupHost(workShell, new Rig())})
 
 	return {
 		workShell,
@@ -41,14 +41,14 @@ export function mockWork<S extends Schematic>(setupWork: SetupWork<S>) {
 	const hostShell = new HostShell<S>()
 	const workShell = new WorkShell<S>()
 
-	workShell.work = mock(setupWork(hostShell, new Rig()))
+	workShell.work = mock({fns: setupWork(hostShell, new Rig())})
 
 	return {
 		workShell,
 		hostShell,
 		work: workShell.work,
 		mockHost: (setupHost: SetupHost<S>): Mocks<S> => {
-			hostShell.host = mock(setupHost(workShell, new Rig()))
+			hostShell.host = mock({fns: setupHost(workShell, new Rig())})
 			return {
 				workShell,
 				hostShell,

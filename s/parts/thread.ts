@@ -1,6 +1,6 @@
 
 import {defer} from "@e280/stz"
-import {endpoint, Messenger, PostableConduit} from "renraku"
+import {endpoint, Messenger, PostableConduit} from "@e280/renraku"
 
 import {WorkShell} from "./shells.js"
 import {CompatWorker, loadWorker} from "./compat.js"
@@ -26,8 +26,10 @@ export class Thread<S extends Schematic> {
 			timeout: options.timeout ?? Infinity,
 			conduit: new PostableConduit(worker),
 			getLocalEndpoint: (remote, rig) => endpoint({
-				meta,
-				host: options.setupHost(new WorkShell(remote), rig),
+				fns: {
+					meta,
+					host: options.setupHost(new WorkShell(remote), rig),
+				},
 			}),
 		})
 
