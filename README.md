@@ -21,6 +21,7 @@ npm i @e280/comrade
 ```
 
 ### Make your schematic type
+your `Schematic` tells comrade about your functions
 ```ts
 // schematic.ts
 
@@ -41,7 +42,8 @@ export type MySchematic = AsSchematic<{
   }
 }>
 ```
-> 💁 *note — arbitrary nesting is fine, actually*
+
+> 💁 ***note*** — *arbitrary nesting is fine, actually*  
 > ```ts
 > export type MySchematic = AsSchematic<{
 >   work: {
@@ -66,7 +68,7 @@ export type MySchematic = AsSchematic<{
 import {Comrade} from "@e280/comrade"
 import {MySchematic} from "./schematic.js"
 
-const host = await Comrade.worker<MySchematic>((shell, rig) => ({
+await Comrade.worker<MySchematic>((shell, rig) => ({
   async add(a, b) {
     return a + b
   },
@@ -74,26 +76,35 @@ const host = await Comrade.worker<MySchematic>((shell, rig) => ({
     return a - b
   },
 }))
-
-// calling main thread functions
-await host.mul(2, 3) // 6
-await host.div(6, 2) // 3
 ```
-> 💁 *note — each side can call the other*
-> ```ts
-> await Comrade.worker<MySchematic>((shell, rig) => ({
+
+> 💁 ***terminology***  
+> - the `shell` gives you access to the other side's functionality
+>   ```ts
 >   async add(a, b) {
 > 
->     // we can call the host functions
->     await shell.host.mul(2, 3) // 6
+>     // calling the host (from the worker)
+>     await shell.host.mul(2, 3)
 > 
 >     return a + b
 >   },
-> })
-> ```
+>   ```
+> - the `rig` lets you mark transferables for your returns (for zero-copy transfers)
+>   ```ts
+>   async getNiceBytes(a, b) {
+>     const bytes = new Uint8Array([0xB0, 0x0B, 0x13, 0x5])
+> 
+>     rig.transfer = [bytes]
+> 
+>     return bytes
+>   },
+>   ```
+
+> 😱 ***bundler warning***  
+> you're probably going to have to bundle your worker module, especially since for some reason the spec/browser people never finished importmap support in workers, so a bundler is required to resolve dependencies in workers 🤷
 
 ### Do the work
-here's two ways to talk to the worker
+so, now you have a choice — you can either spin up a single worker, or you can spin up a cluster of workers.
 - **spin up a single worker thread**
   ```ts
   // thread.ts
@@ -117,7 +128,7 @@ here's two ways to talk to the worker
     }),
   })
 
-  // calling a worker functions
+  // calling worker functions
   await thread.work.add(2, 3) // 5
   await thread.work.sub(3, 2) // 1
 
@@ -154,11 +165,14 @@ here's two ways to talk to the worker
   // terminate the workers when you're all done
   cluster.terminate()
   ```
+  - each call is a queued task, and tasks are round-robin distributed across the worker pool
+  - your work must be *stateless* — when you call a work function, you don't know which worker will respond
+  - the number of workers in the pool will be your hardware concurrency minus one (eg, on an eight-core cpu, we expect 7 workers in the pool)
 
 <br/>
 
 ## Now let's get more organized
-we can split our functions into separate files
+the helpers `host` and `work` help you export functions from separate files.
 
 ```ts
 // work.ts
@@ -195,7 +209,8 @@ const thread = await Comrade.thread<MySchematic>({workerUrl, setupHost})
 const cluster = await Comrade.cluster<MySchematic>({workerUrl, setupHost})
 ```
 
-### Mocks are easy
+### Mocks — fake it 'till you make it
+for testing purposes, you can skip the whole worker/thread/cluster situation and create a mock setup like this
 ```ts
 // mocks.ts
 import {setupWork} from "./work.js"
@@ -205,6 +220,48 @@ export const {work, host} = Comrade.mocks<MySchematic>({setupWork, setupHost})
 
 await work.add(2, 3) // 5
 await host.mul(2, 3) // 6
+```
+
+### Logging
+by default, comrade uses an `ErrorTap` which logs errors to the console.
+
+if you want more verbose noisy logging (logging every request):
+- pass a logger tap to `Comrade.thread`
+    ```ts
+    import {LoggerTap} from "@e280/comrade"
+
+    const thread = await Comrade.thread<MySchematic>({
+      workerUrl,
+      setupHost,
+      tap: new LoggerTap(), // 👈 passing in a logger tap
+    })
+    ```
+- pass a logger tap to `Comrade.cluster`
+    ```ts
+    const cluster = await Comrade.cluster<MySchematic>({
+      workerUrl,
+      setupHost,
+      tap: new LoggerTap(), // 👈 passing in a logger tap
+    })
+    ```
+- pass a logger tap to `Comrade.mocks`
+    ```ts
+    const {host, work} = await Comrade.mocks<MySchematic>({
+      setupHost,
+      setupWork,
+      tap: new LoggerTap(), // 👈 passing in a logger tap
+    })
+    ```
+
+if you want silence (not even errors), provide a dud tap:
+```ts
+import {DudTap} from "@e280/comrade"
+
+const thread = await Comrade.thread<MySchematic>({
+  workerUrl,
+  setupHost,
+  tap: new DudTap(), // 👈 dud tap does nothing, total silence
+})
 ```
 
 <br/>
@@ -218,8 +275,11 @@ you can provide an array of transferables on any api call
 ```ts
 import {tune} from "@e280/comrade"
 
+// some example data
 const buffer = new Uint8Array([0xDE, 0xAD, 0xBE, 0xEF]).buffer
 
+  //                      🤫                😲
+  //                      👇                👇
 await cluster.work.hello[tune]({transfer: [buffer]})({
   lol: "whatever",
   buffer, // <-- this gets transfered speedy-fastly, not copied (we like this)
@@ -247,6 +307,8 @@ you can also make a call a *notification*, which means no response will be sent 
 ```ts
 import {tune} from "@e280/comrade"
 
+  //                               🫢
+  //                               👇
 await cluster.work.goodbye[tune]({notify: true})({
   lol: "whatever",
 })
