@@ -8,6 +8,9 @@
 
 ## v0.0
 
+### v0.0.0-16
+- 🍏 export ErrorTap
+
 ### v0.0.0-15
 - 🍏 add logging via taps, default ErrorTap logs errors
 
