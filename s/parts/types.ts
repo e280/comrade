@@ -1,7 +1,7 @@
 
 import {Deferred} from "@e280/stz"
 import {HostShell, WorkShell} from "./shells.js"
-import {AsFns, Fns, JsonRpc, Remote, Rig} from "@e280/renraku"
+import {AsFns, Fns, JsonRpc, Remote, Rig, Tap} from "@e280/renraku"
 
 /** a schematic requires devs to define functionality on both sides */
 export type Schematic = {
@@ -19,20 +19,17 @@ export type ThreadOptions<S extends Schematic> = {
 	label: string
 	workerUrl: string | URL
 	setupHost: SetupHost<S>
+	tap?: Tap
 	timeout?: number
 }
 
-export type ClusterParams<S extends Schematic> = ClusterRequirements<S> & ClusterOptions
-
-export type ClusterRequirements<S extends Schematic> = {
+export type ClusterOptions<S extends Schematic> = {
 	workerUrl: string | URL
 	setupHost: SetupHost<S>
-}
-
-export type ClusterOptions = {
+	tap?: Tap
 	label?: string
-	workerCount?: number
 	timeout?: number
+	workerCount?: number
 }
 
 /** internal systemic functionality that lives on the main thread */

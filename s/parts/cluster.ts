@@ -1,10 +1,11 @@
 
 import {defer} from "@e280/stz"
-import {Endpoint, remote, Remote} from "@e280/renraku"
+import {Endpoint, remote, Remote, Tap} from "@e280/renraku"
 
 import {Thread} from "./thread.js"
+import {ErrorTap} from "./error-tap.js"
 import {guessOptimalThreadCount} from "./compat.js"
-import {ClusterParams, Schematic, Task} from "./types.js"
+import {ClusterOptions, Schematic, Task} from "./types.js"
 
 /**
  * a pool of web workers
@@ -13,23 +14,22 @@ import {ClusterParams, Schematic, Task} from "./types.js"
  */
 export class Cluster<S extends Schematic> {
 
-	static async make<S extends Schematic>(params: ClusterParams<S>) {
-		const workerCount = params.workerCount ?? guessOptimalThreadCount()
+	static async make<S extends Schematic>(options: ClusterOptions<S>) {
+		const workerCount = options.workerCount ?? guessOptimalThreadCount()
 		const threads = await Promise.all([...Array(workerCount)].map(
 			async(_, index) => Thread.make({
-				...params,
-				label: params.label ?? `${params.label ?? "comrade"}_${index + 1}`,
+				...options,
+				label: options.label ?? `${options.label ?? "comrade"}_${index + 1}`,
 			})
 		))
-		return new this<S>(threads)
+		return new this<S>(threads, {tap: options.tap})
 	}
 
 	work: Remote<S["work"]>
 	#available = new Set<Thread<S>>()
 	#tasks: Task[] = []
 
-	constructor(private threads: Thread<S>[]) {
-
+	constructor(private threads: Thread<S>[], options: {tap?: Tap} = {}) {
 		// delegation
 		const remoteEndpoint: Endpoint = async(request, special) => this.#scheduleTask({
 			request,
@@ -38,7 +38,10 @@ export class Cluster<S extends Schematic> {
 		})
 
 		// remote proxy to call comrade fns
-		this.work = remote({endpoint: remoteEndpoint})
+		this.work = remote({
+			tap: options.tap ?? new ErrorTap(),
+			endpoint: remoteEndpoint,
+		})
 
 		// in the beginning, all threads are available
 		threads.forEach(t => this.#available.add(t))

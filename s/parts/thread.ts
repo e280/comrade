@@ -3,6 +3,7 @@ import {defer} from "@e280/stz"
 import {endpoint, Messenger, PostableConduit} from "@e280/renraku"
 
 import {WorkShell} from "./shells.js"
+import {ErrorTap} from "./error-tap.js"
 import {CompatWorker, loadWorker} from "./compat.js"
 import {Meta, Schematic, ThreadOptions} from "./types.js"
 
@@ -26,6 +27,7 @@ export class Thread<S extends Schematic> {
 			timeout: options.timeout ?? Infinity,
 			conduit: new PostableConduit(worker),
 			getLocalEndpoint: (remote, rig) => endpoint({
+				tap: options.tap ?? new ErrorTap(),
 				fns: {
 					meta,
 					host: options.setupHost(new WorkShell(remote), rig),

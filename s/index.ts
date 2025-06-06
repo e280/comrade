@@ -1,5 +1,5 @@
 
-export {tune, Remote} from "@e280/renraku"
+export {tune, Remote, Tap, LoggerTap, DudTap} from "@e280/renraku"
 
 export * from "./parts/cluster.js"
 export * from "./parts/compat.js"

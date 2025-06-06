@@ -1,7 +1,8 @@
 
-import {mock, Rig} from "@e280/renraku"
+import {mock, Rig, Tap} from "@e280/renraku"
 import {Thread} from "./parts/thread.js"
 import {Cluster} from "./parts/cluster.js"
+import {ErrorTap} from "./parts/error-tap.js"
 import {HostShell, WorkShell} from "./parts/shells.js"
 import {Mocks, Schematic, SetupHost, SetupWork} from "./parts/types.js"
 
@@ -19,15 +20,16 @@ export const host = <S extends Schematic>(fn: SetupHost<S>) => fn
 export function mocks<S extends Schematic>(options: {
 		setupWork: SetupWork<S>
 		setupHost: SetupHost<S>
+		tap?: Tap
 	}): Mocks<S> {
 
-	const {setupWork, setupHost} = options
+	const {setupWork, setupHost, tap = new ErrorTap()} = options
 
 	const hostShell = new HostShell<S>()
 	const workShell = new WorkShell<S>()
 
-	workShell.work = mock({fns: setupWork(hostShell, new Rig())})
-	hostShell.host = mock({fns: setupHost(workShell, new Rig())})
+	workShell.work = mock({tap, fns: setupWork(hostShell, new Rig())})
+	hostShell.host = mock({tap, fns: setupHost(workShell, new Rig())})
 
 	return {
 		workShell,
