@@ -3,7 +3,7 @@ import {endpoint, Messenger, PostableConduit, Tap} from "@e280/renraku"
 
 import {getSelf} from "./compat.js"
 import {HostShell} from "./shells.js"
-import {ErrorTap} from "./error-tap.js"
+import {defaultTap} from "./default-tap.js"
 import {MinistryFns, Schematic, SetupWork} from "./types.js"
 
 /**
@@ -14,11 +14,14 @@ export async function worker<S extends Schematic>(
 		options: {timeout?: number, tap?: Tap} = {},
 	) {
 
+	const tap = options.tap ?? defaultTap
+
 	const messenger = new Messenger<MinistryFns<S>>({
-		tap: options.tap ?? new ErrorTap(),
+		tap,
 		timeout: options.timeout ?? Infinity,
 		conduit: new PostableConduit(await getSelf()),
 		getLocalEndpoint: (remote, rig) => endpoint({
+			tap,
 			fns: setupWork(
 				new HostShell(remote.host),
 				rig,

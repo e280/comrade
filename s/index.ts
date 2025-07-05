@@ -1,9 +1,8 @@
 
-export {tune, Remote, Tap, LoggerTap, DudTap} from "@e280/renraku"
+export {tune, Remote, Tap, LoggerTap, DudTap, ErrorTap} from "@e280/renraku"
 
 export * from "./parts/cluster.js"
 export * from "./parts/compat.js"
-export * from "./parts/error-tap.js"
 export * from "./parts/shells.js"
 export * from "./parts/thread.js"
 export * from "./parts/types.js"

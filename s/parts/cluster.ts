@@ -3,7 +3,7 @@ import {defer} from "@e280/stz"
 import {Endpoint, remote, Remote, Tap} from "@e280/renraku"
 
 import {Thread} from "./thread.js"
-import {ErrorTap} from "./error-tap.js"
+import {defaultTap} from "./default-tap.js"
 import {guessOptimalThreadCount} from "./compat.js"
 import {ClusterOptions, Schematic, Task} from "./types.js"
 
@@ -30,6 +30,8 @@ export class Cluster<S extends Schematic> {
 	#tasks: Task[] = []
 
 	constructor(private threads: Thread<S>[], options: {tap?: Tap} = {}) {
+		const tap = options.tap ?? defaultTap
+
 		// delegation
 		const remoteEndpoint: Endpoint = async(request, special) => this.#scheduleTask({
 			request,
@@ -39,7 +41,7 @@ export class Cluster<S extends Schematic> {
 
 		// remote proxy to call comrade fns
 		this.work = remote({
-			tap: options.tap ?? new ErrorTap(),
+			tap,
 			endpoint: remoteEndpoint,
 		})
 
