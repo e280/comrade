@@ -8,6 +8,9 @@
 
 ## v0.0
 
+### v0.0.0-17
+- 🍏 fix: logging taps
+
 ### v0.0.0-16
 - 🍏 export ErrorTap
 
