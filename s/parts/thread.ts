@@ -4,7 +4,7 @@ import {endpoint, Messenger, PostableConduit} from "@e280/renraku"
 
 import {WorkShell} from "./shells.js"
 import {defaultTap} from "./default-tap.js"
-import {CompatWorker, loadWorker} from "./compat.js"
+import {Compat, CompatWorker} from "../compat/types.js"
 import {Meta, Schematic, ThreadOptions} from "./types.js"
 
 export class Thread<S extends Schematic> {
@@ -13,9 +13,9 @@ export class Thread<S extends Schematic> {
 		public messenger: Messenger<S["work"]>,
 	) {}
 
-	static async make<S extends Schematic>(options: ThreadOptions<S>) {
+	static async make<S extends Schematic>(compat: Compat, options: ThreadOptions<S>) {
 		const tap = options.tap ?? defaultTap
-		const worker = await loadWorker(options.workerUrl, options.label)
+		const worker = compat.loadWorker(options.workerUrl, options.label)
 		const readyprom = defer<void>()
 
 		const meta: Meta = {

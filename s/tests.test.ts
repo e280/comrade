@@ -1,13 +1,13 @@
 
 import {Science, test, expect} from "@e280/science"
 
-import {Comrade} from "./index.js"
+import {Comrade} from "./index.node.js"
 import {MySchematic} from "./demo/schematic.js"
 
 await Science.run({
 	"spin up a cluster, call one fn": test(async() => {
-		const cluster = await Comrade.Cluster.make<MySchematic>({
-			workerUrl: new URL("./demo/math.worker.js", import.meta.url),
+		const cluster = await Comrade.cluster<MySchematic>({
+			workerUrl: new URL("./demo/math-node.js", import.meta.url),
 			setupHost: () => ({
 				async mul(a: number, b: number) {
 					return a * b

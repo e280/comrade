@@ -15,6 +15,11 @@ export type AsSchematic<S extends Schematic> = S
 export type SetupWork<S extends Schematic> = (shell: HostShell<S>, rig: Rig) => S["work"]
 export type SetupHost<S extends Schematic> = (shell: WorkShell<S>, rig: Rig) => S["host"]
 
+export type WorkerOpts = {
+	tap?: Tap
+	timeout?: number
+}
+
 export type ThreadOptions<S extends Schematic> = {
 	label: string
 	workerUrl: string | URL

@@ -5,7 +5,14 @@
 	"license": "MIT",
 	"author": "Chase Moskal <chasemoskal@gmail.com>",
 	"type": "module",
-	"main": "x/index.js",
+	"main": "./x/index.node.js",
+	"exports": {
+		".": {
+			"node": "./x/index.node.js",
+			"browser": "./x/index.browser.js",
+			"default": "./x/index.node.js"
+		}
+	},
 	"files": [
 		"x",
 		"s"

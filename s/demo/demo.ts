@@ -1,11 +1,11 @@
 
 // create a pool of web workers, and call functions on it
 
-import {Cluster} from "../parts/cluster.js"
 import {MySchematic} from "./schematic.js"
+import {Comrade} from "../index.browser.js"
 
-const cluster = await Cluster.make<MySchematic>({
-	workerUrl: new URL("./math.worker.js", import.meta.url),
+const cluster = await Comrade.cluster<MySchematic>({
+	workerUrl: new URL("./math-browser.js", import.meta.url),
 	setupHost: () => ({
 		async mul(a: number, b: number) {
 			return a * b

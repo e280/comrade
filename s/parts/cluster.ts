@@ -3,8 +3,8 @@ import {defer} from "@e280/stz"
 import {Endpoint, remote, Remote, Tap} from "@e280/renraku"
 
 import {Thread} from "./thread.js"
+import {Compat} from "../compat/types.js"
 import {defaultTap} from "./default-tap.js"
-import {guessOptimalThreadCount} from "./compat.js"
 import {ClusterOptions, Schematic, Task} from "./types.js"
 
 /**
@@ -14,10 +14,10 @@ import {ClusterOptions, Schematic, Task} from "./types.js"
  */
 export class Cluster<S extends Schematic> {
 
-	static async make<S extends Schematic>(options: ClusterOptions<S>) {
-		const workerCount = options.workerCount ?? guessOptimalThreadCount()
+	static async make<S extends Schematic>(compat: Compat, options: ClusterOptions<S>) {
+		const workerCount = options.workerCount ?? compat.guessOptimalThreadCount()
 		const threads = await Promise.all([...Array(workerCount)].map(
-			async(_, index) => Thread.make({
+			async(_, index) => Thread.make(compat, {
 				...options,
 				label: options.label ?? `${options.label ?? "comrade"}_${index + 1}`,
 			})

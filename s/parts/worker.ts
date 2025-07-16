@@ -1,17 +1,18 @@
 
-import {endpoint, Messenger, PostableConduit, Tap} from "@e280/renraku"
+import {endpoint, Messenger, PostableConduit} from "@e280/renraku"
 
-import {getSelf} from "./compat.js"
 import {HostShell} from "./shells.js"
+import {Compat} from "../compat/types.js"
 import {defaultTap} from "./default-tap.js"
-import {MinistryFns, Schematic, SetupWork} from "./types.js"
+import {MinistryFns, Schematic, SetupWork, WorkerOpts} from "./types.js"
 
 /**
  * create a web worker
  */
 export async function worker<S extends Schematic>(
+		compat: Compat,
 		setupWork: SetupWork<S>,
-		options: {timeout?: number, tap?: Tap} = {},
+		options: WorkerOpts = {},
 	) {
 
 	const tap = options.tap ?? defaultTap
@@ -19,7 +20,7 @@ export async function worker<S extends Schematic>(
 	const messenger = new Messenger<MinistryFns<S>>({
 		tap,
 		timeout: options.timeout ?? Infinity,
-		conduit: new PostableConduit(await getSelf()),
+		conduit: new PostableConduit(compat.getSelf()),
 		getLocalEndpoint: (remote, rig) => endpoint({
 			tap,
 			fns: setupWork(
