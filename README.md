@@ -8,7 +8,7 @@
 - bidirectional by default — you can call worker functions, and they can call you
 - clusters can magically schedule async calls across web workers
 - seamless browser and node compatibility
-- async rpc powered by [renraku](https://github.com/chase-moskal/renraku)
+- async rpc powered by [renraku](https://github.com/e280/renraku)
 - a project for https://e280.org/
 
 <br/>
@@ -267,7 +267,7 @@ const thread = await Comrade.thread<MySchematic>({
 <br/>
 
 ## Tune the calls
-this advancedness is brought to you by [renraku](https://github.com/chase-moskal/renraku)
+this advancedness is brought to you by [renraku](https://github.com/e280/renraku)
 
 ### Transferables aren't copied
 you can provide an array of transferables on any api call

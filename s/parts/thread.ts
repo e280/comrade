@@ -1,6 +1,6 @@
 
 import {defer} from "@e280/stz"
-import {endpoint, Messenger, PostableConduit} from "@e280/renraku"
+import {makeEndpoint, Messenger, PostableConduit} from "@e280/renraku"
 
 import {WorkShell} from "./shells.js"
 import {defaultTap} from "./default-tap.js"
@@ -28,7 +28,7 @@ export class Thread<S extends Schematic> {
 			tap,
 			timeout: options.timeout ?? Infinity,
 			conduit: new PostableConduit(worker),
-			getLocalEndpoint: (remote, rig) => endpoint({
+			getLocalEndpoint: (remote, rig) => makeEndpoint({
 				tap,
 				fns: {
 					meta,

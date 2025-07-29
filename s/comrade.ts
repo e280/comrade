@@ -1,5 +1,5 @@
 
-import {mock, Rig, Tap} from "@e280/renraku"
+import {makeMock, Rig, Tap} from "@e280/renraku"
 
 import {worker} from "./parts/worker.js"
 import {Compat} from "./compat/types.js"
@@ -31,8 +31,8 @@ export const setupComrade = (compat: Compat) => ({
 		const hostShell = new HostShell<S>()
 		const workShell = new WorkShell<S>()
 
-		workShell.work = mock({tap, fns: setupWork(hostShell, new Rig())})
-		hostShell.host = mock({tap, fns: setupHost(workShell, new Rig())})
+		workShell.work = makeMock({tap, fns: setupWork(hostShell, new Rig())})
+		hostShell.host = makeMock({tap, fns: setupHost(workShell, new Rig())})
 
 		return {
 			workShell,
@@ -46,14 +46,14 @@ export const setupComrade = (compat: Compat) => ({
 		const hostShell = new HostShell<S>()
 		const workShell = new WorkShell<S>()
 
-		workShell.work = mock({tap, fns: setupWork(hostShell, new Rig())})
+		workShell.work = makeMock({tap, fns: setupWork(hostShell, new Rig())})
 
 		return {
 			workShell,
 			hostShell,
 			work: workShell.work,
 			mockHost: (setupHost: SetupHost<S>): Mocks<S> => {
-				hostShell.host = mock({tap, fns: setupHost(workShell, new Rig())})
+				hostShell.host = makeMock({tap, fns: setupHost(workShell, new Rig())})
 				return {
 					workShell,
 					hostShell,

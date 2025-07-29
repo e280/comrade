@@ -1,5 +1,5 @@
 
-import {endpoint, Messenger, PostableConduit} from "@e280/renraku"
+import {makeEndpoint, Messenger, PostableConduit} from "@e280/renraku"
 
 import {HostShell} from "./shells.js"
 import {Compat} from "../compat/types.js"
@@ -21,7 +21,7 @@ export async function worker<S extends Schematic>(
 		tap,
 		timeout: options.timeout ?? Infinity,
 		conduit: new PostableConduit(compat.getSelf()),
-		getLocalEndpoint: (remote, rig) => endpoint({
+		getLocalEndpoint: (remote, rig) => makeEndpoint({
 			tap,
 			fns: setupWork(
 				new HostShell(remote.host),

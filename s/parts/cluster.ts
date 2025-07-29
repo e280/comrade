@@ -1,6 +1,6 @@
 
 import {defer} from "@e280/stz"
-import {Endpoint, remote, Remote, Tap} from "@e280/renraku"
+import {Endpoint, makeRemote, Remote, Tap} from "@e280/renraku"
 
 import {Thread} from "./thread.js"
 import {Compat} from "../compat/types.js"
@@ -40,7 +40,7 @@ export class Cluster<S extends Schematic> {
 		})
 
 		// remote proxy to call comrade fns
-		this.work = remote({
+		this.work = makeRemote({
 			tap,
 			endpoint: remoteEndpoint,
 		})
