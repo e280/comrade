@@ -28,7 +28,7 @@ export class Thread<S extends Schematic> {
 			tap,
 			timeout: options.timeout ?? Infinity,
 			conduit: new PostableConduit(worker),
-			getLocalEndpoint: (remote, rig) => makeEndpoint({
+			getLocalEndpoint: async(remote, rig) => makeEndpoint({
 				tap,
 				fns: {
 					meta,

@@ -21,7 +21,7 @@ export async function worker<S extends Schematic>(
 		tap,
 		timeout: options.timeout ?? Infinity,
 		conduit: new PostableConduit(compat.getSelf()),
-		getLocalEndpoint: (remote, rig) => makeEndpoint({
+		getLocalEndpoint: async(remote, rig) => makeEndpoint({
 			tap,
 			fns: setupWork(
 				new HostShell(remote.host),
