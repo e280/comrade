@@ -21,12 +21,12 @@ await Science.run({
 
 	"mocks": test(async() => {
 		const {work, host} = Comrade.mocks<MySchematic>({
-			setupWork: (_shell, _rig) => ({
+			setupWork: _shell => ({
 				async add(a, b) {
 					return a + b
 				},
 			}),
-			setupHost: (_shell, _rig) => ({
+			setupHost: _shell => ({
 				async mul(a, b) {
 					return a * b
 				},

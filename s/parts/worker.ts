@@ -1,7 +1,7 @@
 
-import {makeEndpoint, Messenger, PostableConduit} from "@e280/renraku"
+import {Messenger, PostableConduit} from "@e280/renraku"
 
-import {HostShell} from "./shells.js"
+import {HostShell, shells} from "./shells.js"
 import {Compat} from "../compat/types.js"
 import {defaultTap} from "./default-tap.js"
 import {MinistryFns, Schematic, SetupWork, WorkerOpts} from "./types.js"
@@ -21,13 +21,9 @@ export async function worker<S extends Schematic>(
 		tap,
 		timeout: options.timeout ?? Infinity,
 		conduit: new PostableConduit(compat.getSelf()),
-		getLocalEndpoint: async(remote, rig) => makeEndpoint({
-			tap,
-			fns: setupWork(
-				new HostShell(remote.host),
-				rig,
-			)
-		}),
+		rpc: async m => setupWork(
+			shells.derive.host<S>(m),
+		),
 	})
 
 	await messenger.remote.meta.ready()

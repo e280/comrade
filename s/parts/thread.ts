@@ -1,8 +1,8 @@
 
 import {defer} from "@e280/stz"
-import {makeEndpoint, Messenger, PostableConduit} from "@e280/renraku"
+import {Messenger, PostableConduit} from "@e280/renraku"
 
-import {WorkShell} from "./shells.js"
+import {shells} from "./shells.js"
 import {defaultTap} from "./default-tap.js"
 import {Compat, CompatWorker} from "../compat/types.js"
 import {Meta, Schematic, ThreadOptions} from "./types.js"
@@ -28,12 +28,11 @@ export class Thread<S extends Schematic> {
 			tap,
 			timeout: options.timeout ?? Infinity,
 			conduit: new PostableConduit(worker),
-			getLocalEndpoint: async(remote, rig) => makeEndpoint({
-				tap,
-				fns: {
-					meta,
-					host: options.setupHost(new WorkShell(remote), rig),
-				},
+			rpc: async m => ({
+				meta,
+				host: options.setupHost(
+					shells.derive.work<S>(m)
+				),
 			}),
 		})
 

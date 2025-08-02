@@ -1,17 +1,39 @@
 
-import {Host, Schematic, Work} from "./types.js"
+import {MessengerMeta, Remote} from "@e280/renraku"
+import {Schematic} from "./types.js"
 
-export class HostShell<S extends Schematic> {
-	host!: Host<S>
-	constructor(host?: Host<S>) {
-		this.host = host!
-	}
+export type HostShell<S extends Schematic> = {
+	host: Remote<S["host"]>
+	transfer: Transferable[] | undefined
 }
 
-export class WorkShell<S extends Schematic> {
-	work!: Work<S>
-	constructor(work?: Work<S>) {
-		this.work = work!
-	}
+export type WorkShell<S extends Schematic> = {
+	work: Remote<S["host"]>
+	transfer: Transferable[] | undefined
+}
+
+export const shells = {
+	derive: {
+		host: <S extends Schematic>(meta: MessengerMeta<S["host"]>): HostShell<S> => ({
+			host: meta.remote,
+			get transfer() { return meta.transfer },
+			set transfer(t) { meta.transfer = t },
+		}),
+		work: <S extends Schematic>(meta: MessengerMeta<S["work"]>): WorkShell<S> => ({
+			work: meta.remote,
+			get transfer() { return meta.transfer },
+			set transfer(t) { meta.transfer = t },
+		}),
+	},
+	mock: {
+		host: <S extends Schematic>(): HostShell<S> => ({
+			host: undefined as any,
+			transfer: undefined,
+		}),
+		work: <S extends Schematic>(): WorkShell<S> => ({
+			work: undefined as any,
+			transfer: undefined,
+		})
+	},
 }
 

@@ -68,7 +68,7 @@ export type MySchematic = AsSchematic<{
 import {Comrade} from "@e280/comrade"
 import {MySchematic} from "./schematic.js"
 
-await Comrade.worker<MySchematic>((shell, rig) => ({
+await Comrade.worker<MySchematic>(shell => ({
   async add(a, b) {
     return a + b
   },
@@ -89,12 +89,12 @@ await Comrade.worker<MySchematic>((shell, rig) => ({
 >     return a + b
 >   },
 >   ```
-> - the `rig` lets you mark transferables for your returns (for zero-copy transfers)
+> - the `shell.transfer` lets you mark transferables for your returns (for zero-copy transfers)
 >   ```ts
 >   async getNiceBytes(a, b) {
 >     const bytes = new Uint8Array([0xB0, 0x0B, 0x13, 0x5])
 > 
->     rig.transfer = [bytes]
+>     shell.transfer = [bytes]
 > 
 >     return bytes
 >   },
@@ -118,7 +118,7 @@ so, now you have a choice — you can either spin up a single worker, or you can
     workerUrl: new URL("./worker.js", import.meta.url),
 
     // functions on the main thread, workers can call these
-    setupHost: (shell, rig) => ({
+    setupHost: shell => ({
       async mul(a: number, b: number) {
         return a * b
       },
@@ -148,7 +148,7 @@ so, now you have a choice — you can either spin up a single worker, or you can
     workerUrl: new URL("./worker.js", import.meta.url),
 
     // functions on the main thread, workers can call these
-    setupHost: (shell, rig) => ({
+    setupHost: shell => ({
       async mul(a: number, b: number) {
         return a * b
       },
@@ -176,7 +176,7 @@ the helpers `host` and `work` help you export functions from separate files.
 
 ```ts
 // work.ts
-export const setupWork = Comrade.work<MySchematic>((shell, rig) => {
+export const setupWork = Comrade.work<MySchematic>(shell => {
   async add(a, b) {
     return a + b
   },
@@ -188,7 +188,7 @@ export const setupWork = Comrade.work<MySchematic>((shell, rig) => {
 
 ```ts
 // host.ts
-export const setupHost = Comrade.host<MySchematic>((shell, rig) => {
+export const setupHost = Comrade.host<MySchematic>(shell => {
   async mul(a: number, b: number) {
     return a * b
   },
@@ -289,12 +289,12 @@ await cluster.work.hello[tune]({transfer: [buffer]})({
 that's good for outgoing requests, but now you also need to set transferables for your responses, which is done like this
 
 ```ts
-await Comrade.worker<MySchematic>((shell, rig) => ({
+await Comrade.worker<MySchematic>(shell => ({
   async coolAction() {
     const buffer = new Uint8Array([0xDE, 0xAD, 0xBE, 0xEF]).buffer
 
     // set transferables for this response
-    rig.transfer = [buffer] // <-- will be transferred, not copied
+    shell.transfer = [buffer] // <-- will be transferred, not copied
 
     return {hello: "world", buffer}
   },

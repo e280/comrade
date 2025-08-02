@@ -3,8 +3,8 @@ import {cpus} from "node:os"
 import fs from "node:fs/promises"
 import {parentPort, Worker} from "node:worker_threads"
 
-import {Compat, CompatWorker} from "./types.js"
 import {ChannelMessage, PostableChannel} from "@e280/renraku"
+import {Compat, CompatWorker} from "./types.js"
 
 export const setupNodeCompat = (): Compat => ({
 	getSelf() {

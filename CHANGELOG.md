@@ -6,7 +6,41 @@
 
 <br/>
 
-## v0.0
+## v0.0.0-21
+- 🟥 merged `rig` into `shell`
+  - old and bad
+    ```ts
+    await Comrade.worker<MySchematic>((shell, rig) => ({
+      async exampleFn() {
+        await shell.host.sum(1, 2)
+        const buffer = new Uint8Array([0xDE, 0xAD, 0xBE, 0xEF]).buffer
+
+        rig.transfer = [buffer]
+        return buffer
+      },
+    }))
+    ```
+  - new and good
+    ```ts
+    //                                 👇
+    await Comrade.worker<MySchematic>(shell => ({
+      async exampleFn() {
+        await shell.host.sum(1, 2)
+        const buffer = new Uint8Array([0xDE, 0xAD, 0xBE, 0xEF]).buffer
+        //👇
+        shell.transfer = [buffer]
+        return buffer
+      },
+    }))
+    ```
+    - `(shell, rig)` => `shell`
+    - `rig.transfer` => `shell.transfer`
+
+### v0.0.0-20
+- 🍏 update dependencies
+
+### v0.0.0-19
+- 🍏 update dependencies
 
 ### v0.0.0-18
 - 🔶 reworked browser/node compat layer

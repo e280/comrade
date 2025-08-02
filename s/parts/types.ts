@@ -1,7 +1,8 @@
 
 import {Deferred} from "@e280/stz"
+import {AsFns, Fns, JsonRpc, Remote, Tap} from "@e280/renraku"
+
 import {HostShell, WorkShell} from "./shells.js"
-import {AsFns, Fns, JsonRpc, Remote, Rig, Tap} from "@e280/renraku"
 
 /** a schematic requires devs to define functionality on both sides */
 export type Schematic = {
@@ -12,8 +13,8 @@ export type Schematic = {
 /** keeps your schematic honest */
 export type AsSchematic<S extends Schematic> = S
 
-export type SetupWork<S extends Schematic> = (shell: HostShell<S>, rig: Rig) => S["work"]
-export type SetupHost<S extends Schematic> = (shell: WorkShell<S>, rig: Rig) => S["host"]
+export type SetupWork<S extends Schematic> = (shell: HostShell<S>) => S["work"]
+export type SetupHost<S extends Schematic> = (shell: WorkShell<S>) => S["host"]
 
 export type WorkerOpts = {
 	tap?: Tap
