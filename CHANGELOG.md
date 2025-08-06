@@ -6,6 +6,9 @@
 
 <br/>
 
+## v0.0.0-22
+- 🍏 update dependencies
+
 ## v0.0.0-21
 - 🟥 merged `rig` into `shell`
   - old and bad
