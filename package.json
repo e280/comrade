@@ -19,15 +19,12 @@
 	],
 	"scripts": {
 		"build": "run-s _clean _links _tsc",
-		"watch": "run-p _tsc-watch test-watch",
+		"start": "octo 'node --watch x/tests.test.js' 'vite --port 8080 --config vite.config.mjs' 'tsc -w'",
 		"_clean": "rm -rf x && mkdir x",
 		"_links": "ln -s \"$(realpath s/index.html)\" x/index.html && ln -s \"$(realpath node_modules)\" x/node_modules",
 		"_tsc": "tsc",
-		"_tsc-watch": "tsc --watch",
-		"start": "vite --port 8080 --config vite.config.mjs",
 		"count": "find s -path '*/_archive' -prune -o -name '*.ts' -exec wc -l {} +",
 		"test": "node x/tests.test.js",
-		"test-watch": "node --watch x/tests.test.js",
 		"test-debug": "node inspect x/tests.test.js"
 	},
 	"dependencies": {
@@ -36,6 +33,7 @@
 	},
 	"devDependencies": {
 		"@e280/science": "^0.0.6",
+		"@e280/scute": "^0.0.0-7",
 		"@types/node": "^24.2.0",
 		"npm-run-all": "^4.1.5",
 		"typescript": "^5.9.2",
