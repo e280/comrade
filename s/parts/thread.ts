@@ -5,12 +5,12 @@ import {Messenger, PostableConduit} from "@e280/renraku"
 import {shells} from "./shells.js"
 import {defaultTap} from "./default-tap.js"
 import {Compat, CompatWorker} from "../compat/types.js"
-import {Infra, Schematic, ThreadOptions} from "./types.js"
+import {Infra, MinistryFns, Schematic, ThreadOptions} from "./types.js"
 
 export class Thread<S extends Schematic> {
 	constructor(
 		public worker: CompatWorker,
-		public messenger: Messenger<S["work"]>,
+		public messenger: Messenger<MinistryFns<S>, S["work"]>,
 	) {}
 
 	static async make<S extends Schematic>(compat: Compat, options: ThreadOptions<S>) {
@@ -19,18 +19,18 @@ export class Thread<S extends Schematic> {
 		const worker = compat.loadWorker(options.workerUrl, label)
 		const readyprom = defer<void>()
 
-		const meta: Infra = {
+		const infra: Infra = {
 			async ready() {
 				readyprom.resolve()
 			},
 		}
 
-		const messenger = new Messenger<S["work"]>({
+		const messenger = new Messenger<MinistryFns<S>, S["work"]>({
 			tap,
 			timeout: options.timeout ?? Infinity,
 			conduit: new PostableConduit(worker),
 			rpc: async m => ({
-				meta,
+				infra,
 				host: options.setupHost(
 					shells.derive.work<S>(m)
 				),

@@ -1,6 +1,6 @@
 
 import {MessengerMeta, Remote} from "@e280/renraku"
-import {Schematic} from "./types.js"
+import {MinistryFns, Schematic} from "./types.js"
 
 export type HostShell<S extends Schematic> = {
 	host: Remote<S["host"]>
@@ -8,14 +8,14 @@ export type HostShell<S extends Schematic> = {
 }
 
 export type WorkShell<S extends Schematic> = {
-	work: Remote<S["host"]>
+	work: Remote<S["work"]>
 	transfer: Transferable[] | undefined
 }
 
 export const shells = {
 	derive: {
-		host: <S extends Schematic>(meta: MessengerMeta<S["host"]>): HostShell<S> => ({
-			host: meta.remote,
+		host: <S extends Schematic>(meta: MessengerMeta<MinistryFns<S>>): HostShell<S> => ({
+			host: meta.remote.host,
 			get transfer() { return meta.transfer },
 			set transfer(t) { meta.transfer = t },
 		}),

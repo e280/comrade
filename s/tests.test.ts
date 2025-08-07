@@ -7,7 +7,7 @@ import {MathSchematic, setupHost} from "./demo/math.js"
 const workerUrl = new URL("./demo/math-node.worker.js", import.meta.url)
 
 await Science.run({
-	"thread fn call": test.only(async() => {
+	"thread fn call": test(async() => {
 		const thread = await Comrade.thread<MathSchematic>({
 			workerUrl,
 			setupHost,

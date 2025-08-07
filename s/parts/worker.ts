@@ -17,7 +17,7 @@ export async function worker<S extends Schematic>(
 
 	const tap = options.tap ?? defaultTap
 
-	const messenger = new Messenger<MinistryFns<S>>({
+	const messenger = new Messenger<S["work"], MinistryFns<S>>({
 		tap,
 		timeout: options.timeout ?? Infinity,
 		conduit: new PostableConduit(compat.getSelf()),
