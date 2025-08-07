@@ -39,13 +39,13 @@ export type ClusterOptions<S extends Schematic> = {
 }
 
 /** internal systemic functionality that lives on the main thread */
-export type Meta = AsFns<{
+export type Infra = AsFns<{
 	ready(): Promise<void>
 }>
 
 /** internal systemic functions plus the user's own */
 export type MinistryFns<S extends Schematic> = {
-	meta: Meta
+	infra: Infra
 	host: S["host"]
 }
 

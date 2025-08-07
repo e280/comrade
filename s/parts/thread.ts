@@ -5,7 +5,7 @@ import {Messenger, PostableConduit} from "@e280/renraku"
 import {shells} from "./shells.js"
 import {defaultTap} from "./default-tap.js"
 import {Compat, CompatWorker} from "../compat/types.js"
-import {Meta, Schematic, ThreadOptions} from "./types.js"
+import {Infra, Schematic, ThreadOptions} from "./types.js"
 
 export class Thread<S extends Schematic> {
 	constructor(
@@ -19,7 +19,7 @@ export class Thread<S extends Schematic> {
 		const worker = compat.loadWorker(options.workerUrl, label)
 		const readyprom = defer<void>()
 
-		const meta: Meta = {
+		const meta: Infra = {
 			async ready() {
 				readyprom.resolve()
 			},

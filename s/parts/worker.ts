@@ -1,7 +1,7 @@
 
 import {Messenger, PostableConduit} from "@e280/renraku"
 
-import {HostShell, shells} from "./shells.js"
+import {shells} from "./shells.js"
 import {Compat} from "../compat/types.js"
 import {defaultTap} from "./default-tap.js"
 import {MinistryFns, Schematic, SetupWork, WorkerOpts} from "./types.js"
@@ -26,7 +26,7 @@ export async function worker<S extends Schematic>(
 		),
 	})
 
-	await messenger.remote.meta.ready()
+	await messenger.remote.infra.ready()
 	return messenger.remote.host
 }
 

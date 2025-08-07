@@ -12,6 +12,7 @@ import {ClusterOptions, Mocks, Schematic, SetupHost, SetupWork, ThreadOptions, W
 export const setupComrade = (compat: Compat) => ({
 	thread: <S extends Schematic>(options: ThreadOptions<S>) => Thread.make(compat, options),
 	cluster: <S extends Schematic>(options: ClusterOptions<S>) => Cluster.make(compat, options),
+
 	worker: <S extends Schematic>(
 		setupWork: SetupWork<S>,
 		options: WorkerOpts = {},

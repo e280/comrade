@@ -2,17 +2,25 @@
 import {Science, test, expect} from "@e280/science"
 
 import {Comrade} from "./index.node.js"
-import {MySchematic} from "./demo/schematic.js"
+import {MathSchematic, setupHost} from "./demo/math.js"
+
+const workerUrl = new URL("./demo/math-node.worker.js", import.meta.url)
 
 await Science.run({
-	"spin up a cluster, call one fn": test(async() => {
-		const cluster = await Comrade.cluster<MySchematic>({
-			workerUrl: new URL("./demo/math-node.worker.js", import.meta.url),
-			setupHost: () => ({
-				async mul(a: number, b: number) {
-					return a * b
-				},
-			}),
+	"thread fn call": test.only(async() => {
+		const thread = await Comrade.thread<MathSchematic>({
+			workerUrl,
+			setupHost,
+		})
+		const x = await thread.work.add(2, 3)
+		expect(x).is(5)
+		thread.terminate()
+	}),
+
+	"cluster fn call": test(async() => {
+		const cluster = await Comrade.cluster<MathSchematic>({
+			workerUrl,
+			setupHost,
 		})
 		const x = await cluster.work.add(2, 3)
 		expect(x).is(5)
@@ -20,7 +28,7 @@ await Science.run({
 	}),
 
 	"mocks": test(async() => {
-		const {work, host} = Comrade.mocks<MySchematic>({
+		const {work, host} = Comrade.mocks<MathSchematic>({
 			setupWork: _shell => ({
 				async add(a, b) {
 					return a + b
