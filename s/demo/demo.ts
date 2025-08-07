@@ -5,7 +5,7 @@ import {MySchematic} from "./schematic.js"
 import {Comrade} from "../index.browser.js"
 
 const cluster = await Comrade.cluster<MySchematic>({
-	workerUrl: new URL("./math-browser.js", import.meta.url),
+	workerUrl: new URL("./math-browser.worker.js", import.meta.url),
 	setupHost: () => ({
 		async mul(a: number, b: number) {
 			return a * b

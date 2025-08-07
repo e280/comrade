@@ -7,7 +7,7 @@ import {MySchematic} from "./demo/schematic.js"
 await Science.run({
 	"spin up a cluster, call one fn": test(async() => {
 		const cluster = await Comrade.cluster<MySchematic>({
-			workerUrl: new URL("./demo/math-node.js", import.meta.url),
+			workerUrl: new URL("./demo/math-node.worker.js", import.meta.url),
 			setupHost: () => ({
 				async mul(a: number, b: number) {
 					return a * b
