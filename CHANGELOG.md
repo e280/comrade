@@ -6,6 +6,9 @@
 
 <br/>
 
+## v0.0.0-23
+- 🍏 fix bug that caused calls to `shell.work` and `shell.host` to fail
+
 ## v0.0.0-22
 - 🍏 update dependencies
 
