@@ -15,7 +15,8 @@ export class Thread<S extends Schematic> {
 
 	static async make<S extends Schematic>(compat: Compat, options: ThreadOptions<S>) {
 		const tap = options.tap ?? defaultTap
-		const worker = compat.loadWorker(options.workerUrl, options.label)
+		const label = options.label ?? "comrade"
+		const worker = compat.loadWorker(options.workerUrl, label)
 		const readyprom = defer<void>()
 
 		const meta: Meta = {

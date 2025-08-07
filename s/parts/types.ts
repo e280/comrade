@@ -22,9 +22,9 @@ export type WorkerOpts = {
 }
 
 export type ThreadOptions<S extends Schematic> = {
-	label: string
 	workerUrl: string | URL
 	setupHost: SetupHost<S>
+	label?: string
 	tap?: Tap
 	timeout?: number
 }
