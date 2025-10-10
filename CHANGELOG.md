@@ -6,6 +6,9 @@
 
 <br/>
 
+## v0.1.0
+- 🍏 update dependencies
+
 ## v0.0.0-24
 - 🍏 update dependencies
 
